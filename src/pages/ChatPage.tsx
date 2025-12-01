@@ -1,7 +1,7 @@
 // src/pages/ChatPage.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings, User, CreditCard, History, Eye, X } from 'lucide-react';
+import { Settings, User, CreditCard, History, Eye, X, ArrowDown } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useAuthStore } from '@/store/authStore';
 import { useProject } from '@/hooks/useProject';
@@ -52,6 +52,7 @@ const ChatPage = () => {
   const [abortController, setAbortController] = useState<AbortController | null>(null); // ✨ NUEVO: Control de cancelación
   const [generatingInProjectId, setGeneratingInProjectId] = useState<string | null>(null); // ✨ Nuevo: rastrear EN QUÉ proyecto se está generando
   const [projectsWithNewMessages, setProjectsWithNewMessages] = useState<string[]>([]); // ✨ Proyectos con mensajes nuevos
+  const [showScrollButton, setShowScrollButton] = useState(false); // ✨ Mostrar botón de scroll
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [showProjectGallery, setShowProjectGallery] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -60,6 +61,7 @@ const ChatPage = () => {
   const [imageManagerKey, setImageManagerKey] = useState(0);
   const [showProjects, setShowProjects] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -75,13 +77,34 @@ const ChatPage = () => {
     }
   }, [currentProject?.id]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToBottom = (smooth = true) => {
+    messagesEndRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
   };
 
+  // Auto-scroll cuando hay mensajes nuevos
   useEffect(() => {
-    scrollToBottom();
+    scrollToBottom(true);
   }, [currentProject?.messages]);
+
+  // Auto-scroll al final al cargar/cambiar proyecto (sin animación)
+  useEffect(() => {
+    scrollToBottom(false);
+  }, [currentProject?.id]);
+
+  // Detectar scroll para mostrar/ocultar botón
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 200;
+      setShowScrollButton(!isNearBottom);
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [messagesContainerRef.current]);
 
   const handleSendMessage = async () => {
     console.log('🔍 Current Project:', currentProject);
@@ -517,7 +540,17 @@ const ChatPage = () => {
 
         {/* Messages Area - Limpio y Espacioso */}
         <ScrollArea className="flex-1 px-6 relative">
-          <div className="max-w-4xl mx-auto space-y-8 py-8">
+          {/* Botón para bajar al final */}
+          {showScrollButton && (
+            <button
+              onClick={() => scrollToBottom(true)}
+              className="fixed bottom-32 right-8 z-50 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 animate-bounce"
+              aria-label="Ir al final"
+            >
+              <ArrowDown size={24} />
+            </button>
+          )}
+          <div ref={messagesContainerRef} className="max-w-4xl mx-auto space-y-8 py-8">
             {!currentProject?.messages?.length ? (
               <div className="flex items-center justify-center py-12">
                 <div className="text-center max-w-4xl w-full">
