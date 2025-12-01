@@ -881,11 +881,11 @@ const ChatPage = () => {
                         }
                         setMessage(e.target.value);
                         
-                        // Auto-resize hasta 8 líneas
+                        // Auto-resize hasta 7 líneas antes de scroll
                         const textarea = e.target;
                         textarea.style.height = 'auto';
-                        const lineHeight = 24; // px por línea
-                        const maxLines = 8;
+                        const lineHeight = 28; // px por línea (más espacio)
+                        const maxLines = 7;
                         const newHeight = Math.min(textarea.scrollHeight, lineHeight * maxLines);
                         textarea.style.height = `${newHeight}px`;
                       }}
@@ -895,7 +895,7 @@ const ChatPage = () => {
                           ? 'bg-gray-800/50 border border-gray-600 text-gray-400 placeholder:text-gray-500 cursor-not-allowed'
                           : 'bg-purple-900/10 border border-purple-500/30 text-purple-100 placeholder:text-purple-400/50 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20'
                       }`}
-                      style={{ maxHeight: '192px' }} // 8 líneas * 24px
+                      style={{ maxHeight: '196px', lineHeight: '28px' }} // 7 líneas * 28px
                       onKeyPress={(e) => {
                         if (user?.plan === 'free' || user?.imagesRemaining <= 0) {
                           e.preventDefault();
