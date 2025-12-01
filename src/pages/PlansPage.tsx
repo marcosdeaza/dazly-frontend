@@ -1,6 +1,6 @@
 // src/pages/PlansPage.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, Crown, Zap, Rocket, Star, Building2, ArrowLeft, Eye, Sparkles } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import { useUserStore } from '@/store/userStore';
@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/components/ui/use-toast';
 import { PLANS } from '@/types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
@@ -28,10 +28,79 @@ const PlanIcon = ({ planId }: { planId: string }) => {
 
 const PlansPage = () => {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const { user, updateUserPlan } = useUserStore();
+  const [searchParams] = useSearchParams();
+  const { user, updateUserPlan, fetchUser } = useUserStore();
   const { token } = useAuthStore();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // ✅ DETECTAR PAGO EXITOSO Y ACTUALIZAR PLAN AUTOMÁTICAMENTE
+  useEffect(() => {
+    const verifyPayment = async () => {
+      const success = searchParams.get('success');
+      const sessionId = searchParams.get('session_id');
+
+      if (success === 'true' && sessionId && token) {
+        console.log('💳 Pago exitoso detectado! Session ID:', sessionId);
+        
+        try {
+          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8081';
+          
+          // Llamar al endpoint de verificación
+          const response = await fetch(`${apiUrl}/api/stripe/verify-session`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ sessionId })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            console.log('✅ Plan actualizado exitosamente:', data.user);
+            
+            // Recargar datos del usuario
+            await fetchUser();
+            
+            // Mostrar mensaje de éxito
+            toast({
+              title: "¡Pago exitoso! 🎉",
+              description: `Tu plan ${data.user.plan.toUpperCase()} está activo con ${data.user.imagesRemaining} créditos.`,
+              duration: 5000
+            });
+
+            // Limpiar URL (quitar parámetros de Stripe)
+            window.history.replaceState({}, '', '/plans');
+          } else {
+            throw new Error(data.error || 'Error verificando pago');
+          }
+
+        } catch (error) {
+          console.error('❌ Error verificando pago:', error);
+          toast({
+            title: "Error verificando pago",
+            description: "Por favor, recarga la página o contacta soporte.",
+            variant: "destructive"
+          });
+        }
+      }
+
+      // Detectar cancelación
+      const canceled = searchParams.get('canceled');
+      if (canceled === 'true') {
+        toast({
+          title: "Pago cancelado",
+          description: "No se realizó ningún cargo. Puedes intentarlo de nuevo cuando quieras.",
+          variant: "destructive"
+        });
+        window.history.replaceState({}, '', '/plans');
+      }
+    };
+
+    verifyPayment();
+  }, [searchParams, token, toast, fetchUser]);
 
   const handleSubscribe = async (planId: string, price: number) => {
     if (!token) {
