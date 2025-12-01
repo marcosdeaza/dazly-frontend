@@ -18,20 +18,19 @@ export const useProject = () => {
   // ✅ Flag para evitar crear proyectos duplicados al recargar
   const hasInitialized = useRef(false);
 
-  // Crear proyecto por defecto si no hay ninguno (después de cargar del servidor)
+  // ✅ SIEMPRE mantener un proyecto activo
   useEffect(() => {
-    // ✅ Solo ejecutar una vez cuando termine de cargar
+    // Esperar a que termine de cargar proyectos del servidor
     if (isLoadingProjects) return;
     
-    // ✅ Solo crear proyecto si NO hay ninguno Y no se ha inicializado
-    if (projects.length === 0 && !hasInitialized.current && !currentProject) {
-      console.log('📁 No hay proyectos, creando proyecto inicial...');
-      hasInitialized.current = true; // ✅ Marcar como inicializado INMEDIATAMENTE
+    // ✅ CASO 1: No hay proyectos → Crear uno nuevo
+    if (projects.length === 0) {
+      console.log('📁 No hay proyectos, creando uno nuevo...');
       
       const defaultProject: Project = {
-        id: crypto.randomUUID(), // Temporal, el servidor asignará el ID real
-        name: 'Mi Primer Proyecto',
-        description: 'Proyecto de bienvenida',
+        id: crypto.randomUUID(),
+        name: 'Proyecto ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        description: '',
         messages: [],
         createdAt: new Date(),
         updatedAt: new Date()
@@ -39,23 +38,33 @@ export const useProject = () => {
       
       addProject(defaultProject).then((serverProject) => {
         if (serverProject) {
+          console.log('✅ Proyecto creado en servidor:', serverProject.id);
           setCurrentProject(serverProject);
         }
       }).catch((error) => {
-        console.error('Error creando proyecto por defecto:', error);
-        // Fallback: usar el proyecto temporal
+        console.error('Error creando proyecto:', error);
         setCurrentProject(defaultProject);
       });
-    } else if (!currentProject && projects.length > 0 && !hasInitialized.current) {
-      // Si hay proyectos pero ninguno seleccionado, seleccionar el más reciente
+    } 
+    // ✅ CASO 2: Hay proyectos pero ninguno seleccionado → Seleccionar el más reciente
+    else if (!currentProject) {
       console.log('📁 Seleccionando proyecto más reciente...');
-      hasInitialized.current = true; // ✅ Marcar para no repetir
       const mostRecent = [...projects].sort((a, b) => 
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )[0];
       setCurrentProject(mostRecent);
+      console.log('✅ Proyecto seleccionado:', mostRecent.name);
     }
-  }, [projects.length, isLoadingProjects]); // ✅ QUITAR currentProject de las dependencias
+    // ✅ CASO 3: El proyecto actual fue eliminado → Seleccionar otro
+    else if (currentProject && !projects.find(p => p.id === currentProject.id)) {
+      console.log('⚠️ Proyecto actual fue eliminado, seleccionando otro...');
+      if (projects.length > 0) {
+        const firstAvailable = projects[0];
+        setCurrentProject(firstAvailable);
+        console.log('✅ Nuevo proyecto seleccionado:', firstAvailable.name);
+      }
+    }
+  }, [projects, projects.length, currentProject, isLoadingProjects, addProject, setCurrentProject]);
 
   const createProject = async (name: string, description?: string) => {
     const newProject: Project = {

@@ -87,8 +87,18 @@ const ChatPage = () => {
     console.log('🔍 Current Project:', currentProject);
     console.log('🔍 Current Project ID:', currentProject?.id);
     
-    if (!message.trim() || !user || !currentProject) {
-      console.log('⚠️ Falta algo:', { message: !!message.trim(), user: !!user, currentProject: !!currentProject });
+    if (!message.trim() || !user) {
+      console.log('⚠️ Falta mensaje o usuario');
+      return;
+    }
+    
+    if (!currentProject) {
+      console.error('❌ No hay proyecto actual - esto NO debería pasar');
+      toast({
+        title: "Error",
+        description: "No hay proyecto activo. Recarga la página.",
+        variant: "destructive"
+      });
       return;
     }
 
