@@ -23,13 +23,14 @@ export const useProject = () => {
     // Esperar a que termine de cargar proyectos del servidor
     if (isLoadingProjects) return;
     
-    // ✅ CASO 1: No hay proyectos → Crear uno nuevo
-    if (projects.length === 0) {
-      console.log('📁 No hay proyectos, creando uno nuevo...');
+    // ✅ CASO 1: No hay proyectos → Crear uno nuevo (SOLO UNA VEZ)
+    if (projects.length === 0 && !hasInitialized.current) {
+      console.log('📁 No hay proyectos, creando uno inicial...');
+      hasInitialized.current = true; // ✅ Marcar como inicializado INMEDIATAMENTE
       
       const defaultProject: Project = {
         id: crypto.randomUUID(),
-        name: 'Proyecto ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        name: 'Mi Primer Proyecto',
         description: '',
         messages: [],
         createdAt: new Date(),
@@ -38,11 +39,11 @@ export const useProject = () => {
       
       addProject(defaultProject).then((serverProject) => {
         if (serverProject) {
-          console.log('✅ Proyecto creado en servidor:', serverProject.id);
+          console.log('✅ Proyecto inicial creado en servidor:', serverProject.id);
           setCurrentProject(serverProject);
         }
       }).catch((error) => {
-        console.error('Error creando proyecto:', error);
+        console.error('Error creando proyecto inicial:', error);
         setCurrentProject(defaultProject);
       });
     } 
