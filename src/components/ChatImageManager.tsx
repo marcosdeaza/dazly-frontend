@@ -45,11 +45,11 @@ export const ChatImageManager = ({
     onImagesChange(newImages);
   }, [onImagesChange]);
 
-  // Reset interno cuando se cierra el panel para evitar bugs de parpadeo
+  // Las imágenes SIEMPRE persisten cuando se cierra el panel
   React.useEffect(() => {
     if (!isVisible && images.length > 0) {
-      console.log('👁️ Panel cerrado - Manteniendo imágenes pero reseteando estado interno');
-      // Las imágenes persisten pero reseteamos el estado visual
+      console.log('👁️ Panel cerrado - Las imágenes SE MANTIENEN:', images.length);
+      // NO hacer nada - las imágenes persisten hasta que se envíe el mensaje
     }
   }, [isVisible, images.length]);
 

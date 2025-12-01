@@ -35,18 +35,21 @@ export const SmartImageUploader = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  // ✅ SINCRONIZAR: Cuando persistentImages se vacía desde afuera, limpiar completamente
+  // ✅ MANTENER IMÁGENES: Solo actualizar si hay cambio real en persistentImages
   React.useEffect(() => {
-    if (persistentImages.length === 0 && images.length > 0) {
-      console.log('🧹 persistentImages vacío - Limpiando images local completamente');
-      setImages([]);
-      setIsProcessing(false);
-      // Resetear estado interno completamente
-    } else if (persistentImages.length > 0 && images.length === 0) {
+    // Si persistentImages tiene imágenes, sincronizar
+    if (persistentImages.length > 0) {
       console.log('🔄 Sincronizando con persistentImages:', persistentImages.length);
       setImages(persistentImages);
+      setIsProcessing(false);
     }
-  }, [persistentImages.length]); // Solo dependencia de length para evitar loops
+    // Solo limpiar si persistentImages se vacía explícitamente (después de enviar mensaje)
+    else if (persistentImages.length === 0 && images.length > 0) {
+      console.log('🧹 persistentImages vacío - Limpiando después de enviar mensaje');
+      setImages([]);
+      setIsProcessing(false);
+    }
+  }, [persistentImages]); // Dependencia completa para detectar cambios reales
 
   // NOTIFICAR CAMBIOS AL PADRE
   React.useEffect(() => {

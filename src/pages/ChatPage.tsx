@@ -276,7 +276,8 @@ const ChatPage = () => {
           console.log('💳 Créditos actualizados desde servidor:', data.imagesRemaining);
         }
         
-        // LIMPIAR IMÁGENES SOLO DESPUÉS DEL ÉXITO (input ya está limpio)
+        // ✅ LIMPIAR IMÁGENES SOLO DESPUÉS DEL ÉXITO
+        console.log('✅ Mensaje enviado con éxito - Limpiando gestor de imágenes');
         resetImageManager();
       } else {
         console.error('❌ Error en respuesta:', data);
@@ -304,7 +305,8 @@ const ChatPage = () => {
         setMessage(messageContent);
       }
       
-      // En caso de error también resetear imágenes para evitar estado inconsistente
+      // ✅ En caso de error también limpiar imágenes para evitar estado inconsistente
+      console.log('❌ Error al generar - Limpiando gestor de imágenes');
       resetImageManager();
     } finally {
       setIsGenerating(false);
