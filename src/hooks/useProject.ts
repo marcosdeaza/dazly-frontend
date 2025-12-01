@@ -23,24 +23,28 @@ export const useProject = () => {
     // ❌ NO CREAR PROYECTOS AUTOMÁTICAMENTE
     // El usuario debe crear proyectos manualmente desde el botón "Nuevo Proyecto"
     
-    // ✅ CASO 1: Hay proyectos pero ninguno seleccionado → Seleccionar el más reciente
+    // ✅ SOLO SELECCIONAR PROYECTO EXISTENTE, NUNCA CREAR UNO NUEVO
     if (projects.length > 0 && !currentProject) {
-      console.log('📁 Seleccionando proyecto más reciente...');
+      console.log('📁 Seleccionando proyecto más reciente (SIN crear nada)');
       const mostRecent = [...projects].sort((a, b) => 
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )[0];
       setCurrentProject(mostRecent);
       console.log('✅ Proyecto seleccionado:', mostRecent.name);
-    // ✅ CASO 2: El proyecto actual fue eliminado → Seleccionar otro
-    else if (projects.length > 0 && currentProject && !projects.find(p => p.id === currentProject.id)) {
-      console.log('⚠️ Proyecto actual fue eliminado, seleccionando otro...');
-      if (projects.length > 0) {
-        const firstAvailable = projects[0];
-        setCurrentProject(firstAvailable);
-        console.log('✅ Nuevo proyecto seleccionado:', firstAvailable.name);
-      }
     }
-  }, [projects, projects.length, currentProject, isLoadingProjects, addProject, setCurrentProject]);
+    // ✅ Si el proyecto actual fue eliminado, seleccionar otro
+    else if (projects.length > 0 && currentProject && !projects.find(p => p.id === currentProject.id)) {
+      console.log('⚠️ Proyecto actual eliminado, seleccionando otro');
+      const firstAvailable = projects[0];
+      setCurrentProject(firstAvailable);
+      console.log('✅ Nuevo proyecto seleccionado:', firstAvailable.name);
+    }
+    // ✅ Si NO hay proyectos, dejar currentProject en null (NO CREAR)
+    else if (projects.length === 0 && currentProject) {
+      console.log('📭 No hay proyectos - Limpiando currentProject');
+      setCurrentProject(null);
+    }
+  }, [projects, projects.length, currentProject, isLoadingProjects, setCurrentProject]);
 
   const createProject = async (name: string, description?: string) => {
     const newProject: Project = {
