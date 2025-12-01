@@ -64,37 +64,39 @@ const PlansPage = () => {
             // Recargar datos del usuario
             await fetchUser();
             
-            // Mostrar mensaje de éxito
+            // Mostrar mensaje de bienvenida profesional
+            const planNames: Record<string, string> = {
+              pulse: 'Pulse',
+              flow: 'Flow',
+              summit: 'Summit',
+              peak: 'Peak',
+              infinity: 'Infinity'
+            };
+            
+            const planName = planNames[data.user.plan] || data.user.plan.toUpperCase();
+            
             toast({
-              title: "¡Pago exitoso! 🎉",
-              description: `Tu plan ${data.user.plan.toUpperCase()} está activo con ${data.user.imagesRemaining} créditos.`,
-              duration: 5000
+              title: `¡Bienvenido a Plan ${planName}! 🎉`,
+              description: `Tienes ${data.user.imagesRemaining} créditos listos para crear.`,
+              duration: 6000
             });
 
             // Limpiar URL (quitar parámetros de Stripe)
             window.history.replaceState({}, '', '/plans');
           } else {
-            throw new Error(data.error || 'Error verificando pago');
+            // Solo mostrar error en consola, no molestar al usuario
+            console.error('❌ Error verificando pago:', data.error);
           }
 
         } catch (error) {
+          // Solo log, sin notificación molesta
           console.error('❌ Error verificando pago:', error);
-          toast({
-            title: "Error verificando pago",
-            description: "Por favor, recarga la página o contacta soporte.",
-            variant: "destructive"
-          });
         }
       }
 
-      // Detectar cancelación
+      // Detectar cancelación - solo limpiar URL, sin notificación molesta
       const canceled = searchParams.get('canceled');
       if (canceled === 'true') {
-        toast({
-          title: "Pago cancelado",
-          description: "No se realizó ningún cargo. Puedes intentarlo de nuevo cuando quieras.",
-          variant: "destructive"
-        });
         window.history.replaceState({}, '', '/plans');
       }
     };

@@ -23,9 +23,10 @@ export const useProject = () => {
     // ✅ Solo ejecutar una vez cuando termine de cargar
     if (isLoadingProjects) return;
     
-    if (projects.length === 0 && !hasInitialized.current) {
+    // ✅ Solo crear proyecto si NO hay ninguno Y no se ha inicializado
+    if (projects.length === 0 && !hasInitialized.current && !currentProject) {
       console.log('📁 No hay proyectos, creando proyecto inicial...');
-      hasInitialized.current = true; // ✅ Marcar como inicializado
+      hasInitialized.current = true; // ✅ Marcar como inicializado INMEDIATAMENTE
       
       const defaultProject: Project = {
         id: crypto.randomUUID(), // Temporal, el servidor asignará el ID real
@@ -45,15 +46,16 @@ export const useProject = () => {
         // Fallback: usar el proyecto temporal
         setCurrentProject(defaultProject);
       });
-    } else if (!currentProject && projects.length > 0) {
+    } else if (!currentProject && projects.length > 0 && !hasInitialized.current) {
       // Si hay proyectos pero ninguno seleccionado, seleccionar el más reciente
       console.log('📁 Seleccionando proyecto más reciente...');
+      hasInitialized.current = true; // ✅ Marcar para no repetir
       const mostRecent = [...projects].sort((a, b) => 
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )[0];
       setCurrentProject(mostRecent);
     }
-  }, [projects.length, currentProject, isLoadingProjects]); // ✅ Solo cuando cambia la CANTIDAD
+  }, [projects.length, isLoadingProjects]); // ✅ QUITAR currentProject de las dependencias
 
   const createProject = async (name: string, description?: string) => {
     const newProject: Project = {
