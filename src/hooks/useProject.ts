@@ -15,49 +15,24 @@ export const useProject = () => {
     isLoadingProjects
   } = useUserStore();
 
-  // ✅ Flag para evitar crear proyectos duplicados al recargar
-  const hasInitialized = useRef(false);
-
-  // ✅ SIEMPRE mantener un proyecto activo
+  // ✅ SIMPLEMENTE NO CREAR PROYECTOS AUTOMÁTICAMENTE
   useEffect(() => {
     // Esperar a que termine de cargar proyectos del servidor
     if (isLoadingProjects) return;
     
-    // ✅ CASO 1: No hay proyectos → Crear uno nuevo (SOLO UNA VEZ)
-    if (projects.length === 0 && !hasInitialized.current) {
-      console.log('📁 No hay proyectos, creando uno inicial...');
-      hasInitialized.current = true; // ✅ Marcar como inicializado INMEDIATAMENTE
-      
-      const defaultProject: Project = {
-        id: crypto.randomUUID(),
-        name: 'Mi Primer Proyecto',
-        description: '',
-        messages: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      
-      addProject(defaultProject).then((serverProject) => {
-        if (serverProject) {
-          console.log('✅ Proyecto inicial creado en servidor:', serverProject.id);
-          setCurrentProject(serverProject);
-        }
-      }).catch((error) => {
-        console.error('Error creando proyecto inicial:', error);
-        setCurrentProject(defaultProject);
-      });
-    } 
-    // ✅ CASO 2: Hay proyectos pero ninguno seleccionado → Seleccionar el más reciente
-    else if (!currentProject) {
+    // ❌ NO CREAR PROYECTOS AUTOMÁTICAMENTE
+    // El usuario debe crear proyectos manualmente desde el botón "Nuevo Proyecto"
+    
+    // ✅ CASO 1: Hay proyectos pero ninguno seleccionado → Seleccionar el más reciente
+    if (projects.length > 0 && !currentProject) {
       console.log('📁 Seleccionando proyecto más reciente...');
       const mostRecent = [...projects].sort((a, b) => 
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       )[0];
       setCurrentProject(mostRecent);
       console.log('✅ Proyecto seleccionado:', mostRecent.name);
-    }
-    // ✅ CASO 3: El proyecto actual fue eliminado → Seleccionar otro
-    else if (currentProject && !projects.find(p => p.id === currentProject.id)) {
+    // ✅ CASO 2: El proyecto actual fue eliminado → Seleccionar otro
+    else if (projects.length > 0 && currentProject && !projects.find(p => p.id === currentProject.id)) {
       console.log('⚠️ Proyecto actual fue eliminado, seleccionando otro...');
       if (projects.length > 0) {
         const firstAvailable = projects[0];
