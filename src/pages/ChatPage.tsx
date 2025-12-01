@@ -218,31 +218,20 @@ const ChatPage = () => {
         console.log('📝 Mensaje a guardar en proyecto:', targetProjectId);
         console.log('🖼️ ImageUrl:', newMessage.imageUrl);
         
-        // ✅ CORRECCIÓN: SIEMPRE usar el proyecto objetivo
-        const targetProject = projects.find(p => p.id === targetProjectId);
+        // ✅ CORRECCIÓN: Usar addMessage en lugar de updateProject completo
+        await addMessage({
+          role: 'assistant',
+          content: data.aiMessage.content,
+          imageUrl: data.imageUrl || undefined,
+          imagePrompt: messageContent
+        });
         
-        if (targetProject) {
-          const messageWithId = {
-            ...newMessage,
-            id: crypto.randomUUID(),
-            timestamp: new Date()
-          };
-          
-          // Actualizar el proyecto objetivo EN EL STORE
-          await updateProject(targetProjectId, {
-            messages: [...targetProject.messages, messageWithId],
-            updatedAt: new Date()
-          });
-          
-          console.log('✅ Respuesta guardada en proyecto objetivo:', targetProjectId);
-          
-          // Si el usuario cambió de proyecto, agregar notificación
-          if (projectChangedDuringGeneration) {
-            console.log('📢 Agregando notificación (usuario en otro proyecto)');
-            setProjectsWithNewMessages(prev => [...new Set([...prev, targetProjectId])]);
-          }
-        } else {
-          console.error('❌ Proyecto objetivo no encontrado:', targetProjectId);
+        console.log('✅ Respuesta de IA agregada al proyecto:', targetProjectId);
+        
+        // Si el usuario cambió de proyecto, agregar notificación
+        if (projectChangedDuringGeneration) {
+          console.log('📢 Agregando notificación (usuario en otro proyecto)');
+          setProjectsWithNewMessages(prev => [...new Set([...prev, targetProjectId])]);
         }
 
         // ✅ Actualizar créditos desde la respuesta del servidor (fuente de verdad)
