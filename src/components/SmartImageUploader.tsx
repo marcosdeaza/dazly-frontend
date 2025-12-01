@@ -35,26 +35,30 @@ export const SmartImageUploader = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  // ✅ MANTENER IMÁGENES: Solo actualizar si hay cambio real en persistentImages
+  // ✅ SOLO INICIALIZAR UNA VEZ: Cargar persistentImages al montar el componente
+  const [initialized, setInitialized] = React.useState(false);
+  
   React.useEffect(() => {
-    // Si persistentImages tiene imágenes, sincronizar
-    if (persistentImages.length > 0) {
-      console.log('🔄 Sincronizando con persistentImages:', persistentImages.length);
+    if (!initialized && persistentImages.length > 0) {
+      console.log('🔄 Inicializando con persistentImages:', persistentImages.length);
       setImages(persistentImages);
-      setIsProcessing(false);
+      setInitialized(true);
     }
-    // Solo limpiar si persistentImages se vacía explícitamente (después de enviar mensaje)
-    else if (persistentImages.length === 0 && images.length > 0) {
-      console.log('🧹 persistentImages vacío - Limpiando después de enviar mensaje');
+    // Solo limpiar si persistentImages se vacía DESPUÉS de tener imágenes (al enviar mensaje)
+    else if (initialized && persistentImages.length === 0 && images.length > 0) {
+      console.log('🧹 Limpiando imágenes después de enviar mensaje');
       setImages([]);
-      setIsProcessing(false);
+      setInitialized(false);
     }
-  }, [persistentImages]); // Dependencia completa para detectar cambios reales
+  }, [persistentImages.length, initialized]); // Solo length para evitar re-renders innecesarios
 
-  // NOTIFICAR CAMBIOS AL PADRE
+  // NOTIFICAR CAMBIOS AL PADRE - Solo cuando cambia la cantidad de imágenes
   React.useEffect(() => {
-    onImagesReady(images);
-  }, [images, onImagesReady]);
+    if (images.length !== persistentImages.length) {
+      console.log('📸 Notificando cambio de imágenes al padre:', images.length);
+      onImagesReady(images);
+    }
+  }, [images.length]); // Solo length para evitar loops infinitos
 
   const processFiles = useCallback(async (files: FileList) => {
     // Filtrar solo archivos de imagen válidos primero
