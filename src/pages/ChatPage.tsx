@@ -66,7 +66,7 @@ const ChatPage = () => {
   
   const { user, updateCreditsFromServer, projects, updateProject } = useUserStore();
   const { logout, token } = useAuthStore();
-  const { currentProject, addMessage, updateCurrentProject, setCurrentProject } = useProject();
+  const { currentProject, addMessage, updateCurrentProject, setCurrentProject, createProject } = useProject();
   
   // ✨ Limpiar notificación cuando entras a un proyecto
   useEffect(() => {
@@ -92,14 +92,24 @@ const ChatPage = () => {
       return;
     }
     
+    // ✅ Si no hay proyecto, crear uno automáticamente SOLO al intentar enviar mensaje
     if (!currentProject) {
-      console.error('❌ No hay proyecto actual - esto NO debería pasar');
-      toast({
-        title: "Error",
-        description: "No hay proyecto activo. Recarga la página.",
-        variant: "destructive"
-      });
-      return;
+      console.log('📁 No hay proyecto - Creando "Mi Primer Proyecto" automáticamente al enviar mensaje');
+      try {
+        await createProject('Mi Primer Proyecto', 'Proyecto creado al enviar tu primer mensaje');
+        console.log('✅ Proyecto "Mi Primer Proyecto" creado automáticamente');
+        // createProject ya selecciona el proyecto automáticamente
+        // Esperar un momento para que se actualice el estado
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (error) {
+        console.error('❌ Error creando proyecto automático:', error);
+        toast({
+          title: "Error",
+          description: "No se pudo crear el proyecto. Intenta de nuevo.",
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     // Permitir chatear siempre - solo advertir si intenta generar sin créditos
