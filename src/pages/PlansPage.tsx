@@ -29,7 +29,7 @@ const PlanIcon = ({ planId }: { planId: string }) => {
 const PlansPage = () => {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
-  const { user, updateUserPlan, fetchUser } = useUserStore();
+  const { user, updateUserPlan, syncCredits } = useUserStore();
   const { token } = useAuthStore();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -61,8 +61,8 @@ const PlansPage = () => {
           if (response.ok && data.success) {
             console.log('✅ Plan actualizado exitosamente:', data.user);
             
-            // Recargar datos del usuario
-            await fetchUser();
+            // Recargar datos del usuario (sincronizar créditos)
+            await syncCredits();
             
             // Mostrar mensaje de bienvenida profesional
             const planNames: Record<string, string> = {
@@ -102,7 +102,7 @@ const PlansPage = () => {
     };
 
     verifyPayment();
-  }, [searchParams, token, toast, fetchUser]);
+  }, [searchParams, token, toast, syncCredits]);
 
   const handleSubscribe = async (planId: string, price: number) => {
     if (!token) {
