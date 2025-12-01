@@ -1036,9 +1036,9 @@ const ChatPage = () => {
                       }`}>
                         {message.trim().split(/\s+/).filter(word => word.length > 0).length}/500 palabras
                       </span>
-                      {smartImages.length > 0 && (
+                      {uploadedImages.length > 0 && (
                         <span className="text-xs text-purple-400/40 font-light">
-                          {smartImages.length} imagen{smartImages.length !== 1 ? 'es' : ''} adjunta{smartImages.length !== 1 ? 's' : ''}
+                          {uploadedImages.length} imagen{uploadedImages.length !== 1 ? 'es' : ''} adjunta{uploadedImages.length !== 1 ? 's' : ''}
                         </span>
                       )}
                     </div>
