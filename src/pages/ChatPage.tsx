@@ -1,7 +1,7 @@
 // src/pages/ChatPage.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings, User, CreditCard, History, Eye, X, ArrowDown } from 'lucide-react';
+import { Settings, User, CreditCard, History, Eye, X, ArrowDown, ImageIcon } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useAuthStore } from '@/store/authStore';
 import { useProject } from '@/hooks/useProject';
@@ -33,7 +33,7 @@ import {
   EditIcon, 
   GalleryIcon 
 } from '@/components/icons/StyleIcons';
-import { ChatImageManager } from '@/components/ChatImageManager';
+// ChatImageManager eliminado - Ahora usamos sistema inline
 import { MarkdownMessage } from '@/components/MarkdownMessage';
 
 interface SmartImage {
@@ -56,9 +56,8 @@ const ChatPage = () => {
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [showProjectGallery, setShowProjectGallery] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [smartImages, setSmartImages] = useState<SmartImage[]>([]);
-  const [showImageManager, setShowImageManager] = useState(false);
-  const [imageManagerKey, setImageManagerKey] = useState(0);
+  const [uploadedImages, setUploadedImages] = useState<SmartImage[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [showProjects, setShowProjects] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -149,10 +148,11 @@ const ChatPage = () => {
 
     // NUEVA LÓGICA SIMPLE Y LIMPIA
     const messageContent = message.trim();
-    const attachedImages = [...smartImages]; // Copia inmutable
+    const attachedImages = [...uploadedImages]; // Copia inmutable
     
-    // ✅ Limpiar el input inmediatamente
+    // ✅ Limpiar el input Y las imágenes inmediatamente
     setMessage('');
+    setUploadedImages([]); // Limpiar imágenes al enviar
     setIsGenerating(true);
     setGeneratingInProjectId(targetProjectId); // ✨ Marcar que se está generando en este proyecto
 
@@ -276,9 +276,8 @@ const ChatPage = () => {
           console.log('💳 Créditos actualizados desde servidor:', data.imagesRemaining);
         }
         
-        // ✅ LIMPIAR IMÁGENES SOLO DESPUÉS DEL ÉXITO
-        console.log('✅ Mensaje enviado con éxito - Limpiando gestor de imágenes');
-        resetImageManager();
+        // ✅ Imágenes ya limpiadas al enviar
+        console.log('✅ Mensaje enviado con éxito');
       } else {
         console.error('❌ Error en respuesta:', data);
         throw new Error('Error en la respuesta del servidor');
@@ -305,9 +304,9 @@ const ChatPage = () => {
         setMessage(messageContent);
       }
       
-      // ✅ En caso de error también limpiar imágenes para evitar estado inconsistente
-      console.log('❌ Error al generar - Limpiando gestor de imágenes');
-      resetImageManager();
+      // ✅ En caso de error, restaurar imágenes para que el usuario pueda reintentar
+      console.log('❌ Error al generar - Restaurando imágenes');
+      setUploadedImages(attachedImages);
     } finally {
       setIsGenerating(false);
       setGeneratingInProjectId(null); // ✨ Limpiar el proyecto de generación
@@ -324,16 +323,51 @@ const ChatPage = () => {
     }
   };
 
-  // Nueva función simple para resetear el gestor de imágenes
-  const resetImageManager = () => {
-    console.log('🧹 Reseteando gestor de imágenes - LIMPIEZA TOTAL');
-    // ✅ PRIMERO limpiar el estado
-    setSmartImages([]);
-    // ✅ LUEGO forzar recreación del componente
-    setImageManagerKey(prev => {
-      const newKey = prev + 1;
-      console.log(`✅ ImageManagerKey: ${prev} → ${newKey}`);
-      return newKey;
+  // 📎 Abrir selector de archivos
+  const handleImageButtonClick = () => {
+    if (!isGenerating) {
+      fileInputRef.current?.click();
+    }
+  };
+
+  // 📋 Manejar paste desde portapapeles (Ctrl+V)
+  const handlePaste = async (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    const imageFiles = Array.from(items)
+      .filter(item => item.type.startsWith('image/'))
+      .map(item => item.getAsFile())
+      .filter(file => file !== null) as File[];
+
+    if (imageFiles.length > 0) {
+      const newImages: SmartImage[] = imageFiles.map(file => ({
+        id: crypto.randomUUID(),
+        file,
+        url: URL.createObjectURL(file),
+        preview: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+        type: file.type
+      }));
+
+      setUploadedImages(prev => [...prev, ...newImages]);
+      console.log('📋 Imágenes pegadas:', newImages.length);
+      
+      toast({
+        title: "Imagen pegada",
+        description: `${imageFiles.length} imagen(es) agregada(s)`,
+        duration: 2000
+      });
+    }
+  };
+
+  // 🗑️ Eliminar imagen específica
+  const removeImage = (imageId: string) => {
+    setUploadedImages(prev => {
+      const filtered = prev.filter(img => img.id !== imageId);
+      console.log('🗑️ Imagen eliminada:', imageId, '- Quedan:', filtered.length);
+      return filtered;
     });
   };
 
@@ -902,28 +936,27 @@ const ChatPage = () => {
               <div className="flex items-center space-x-4">
                 {/* Main Input */}
                 <div className="flex-1 space-y-3">
-                  {/* Preview automático de imágenes que se enviarán */}
-                  {smartImages.length > 0 && message.trim() && (
-                    <div className="p-3 bg-gradient-to-r from-purple-900/10 to-pink-900/10 rounded-xl border border-purple-500/20 backdrop-blur-sm">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <ImageIcon className="h-3 w-3 text-purple-400" />
-                        <span className="text-xs text-purple-300/80">Se incluirán {smartImages.length} imagen{smartImages.length > 1 ? 'es' : ''}</span>
-                      </div>
-                      <div className="flex gap-2">
-                        {smartImages.slice(0, 3).map((image, idx) => (
+                  {/* Miniaturas de imágenes subidas - Aparecen ARRIBA del textarea */}
+                  {uploadedImages.length > 0 && (
+                    <div className="flex flex-wrap gap-2 p-2 bg-purple-900/5 rounded-xl border border-purple-500/20">
+                      {uploadedImages.map((image) => (
+                        <div key={image.id} className="relative group">
                           <img
-                            key={image.id}
                             src={image.preview || image.url}
                             alt={image.name}
-                            className="w-8 h-8 rounded object-cover"
+                            className="w-20 h-20 rounded-lg object-cover border-2 border-purple-500/30"
                           />
-                        ))}
-                        {smartImages.length > 3 && (
-                          <div className="w-8 h-8 rounded bg-purple-600/20 flex items-center justify-center">
-                            <span className="text-xs text-purple-300">+{smartImages.length - 3}</span>
-                          </div>
-                        )}
-                      </div>
+                          {/* Botón X para eliminar */}
+                          <button
+                            onClick={() => removeImage(image.id)}
+                            disabled={isGenerating}
+                            className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-30"
+                            title="Eliminar imagen"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
 
@@ -962,32 +995,35 @@ const ChatPage = () => {
                           handleSendMessage();
                         }
                       }}
+                      onPaste={handlePaste}
                       disabled={isGenerating}
                       rows={1}
                     />
                     
-                    {/* Gestor de imágenes simplificado - Posición fija mejorada */}
-                    <div className="absolute right-2 bottom-2 z-20" style={{ pointerEvents: isGenerating ? 'none' : 'auto' }}>
-                      <div className={`transition-opacity duration-200 ${isGenerating ? 'opacity-30' : 'opacity-100'}`}>
-                        <ChatImageManager
-                          key={`${imageManagerKey}-${currentProject?.id}`}
-                          onImagesChange={handleSmartImagesChange}
-                          isVisible={showImageManager && !isGenerating}
-                          onToggle={() => {
-                            if (!isGenerating) {
-                              setShowImageManager(!showImageManager);
-                            }
-                          }}
-                          onClear={() => {
-                            if (!isGenerating) {
-                              console.log('🧹 onClear llamado - Limpiando smartImages');
-                              setSmartImages([]);
-                              setImageManagerKey(prev => prev + 1);
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
+                    {/* Input de archivos oculto */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleFileSelect}
+                      className="hidden"
+                      disabled={isGenerating}
+                    />
+                    
+                    {/* Botón de clip para subir imágenes */}
+                    <button
+                      onClick={handleImageButtonClick}
+                      disabled={isGenerating}
+                      className={`absolute right-14 bottom-2 p-2 rounded-lg transition-all duration-200 ${
+                        isGenerating 
+                          ? 'opacity-30 cursor-not-allowed' 
+                          : 'hover:bg-purple-500/20 text-purple-400 hover:text-purple-300'
+                      }`}
+                      title="Adjuntar imágenes (o pega con Ctrl+V)"
+                    >
+                      <ImageIcon size={20} />
+                    </button>
                   </div>
                   
                   {/* ✨ NUEVO: Smart Tips, Mejorar Prompt y Count */}
