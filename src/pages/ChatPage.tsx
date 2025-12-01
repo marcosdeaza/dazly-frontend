@@ -68,7 +68,7 @@ const ChatPage = () => {
   
   const { user, updateCreditsFromServer, projects, updateProject } = useUserStore();
   const { logout, token } = useAuthStore();
-  const { currentProject, addMessage, updateCurrentProject, setCurrentProject, createProject } = useProject();
+  const { currentProject, addMessage, updateCurrentProject, setCurrentProject, createProject, isLoadingProjects } = useProject();
   
   // ✨ Limpiar notificación cuando entras a un proyecto
   useEffect(() => {
