@@ -115,6 +115,9 @@ const ChatPage = () => {
       return;
     }
     
+    // ✅ Ocultar gestor de imágenes al enviar
+    setShowImageManager(false);
+    
     // ✅ Si no hay proyecto, crear uno automáticamente SOLO al intentar enviar mensaje
     if (!currentProject) {
       console.log('📁 No hay proyecto - Creando "Mi Primer Proyecto" automáticamente al enviar mensaje');
@@ -609,7 +612,7 @@ const ChatPage = () => {
               </div>
             ) : (
               currentProject.messages.map((msg, index) => (
-                <div key={msg.id} className={`space-y-4 animate-cascade-in ${index % 4 === 0 ? 'cascade-delay-1' : index % 4 === 1 ? 'cascade-delay-2' : index % 4 === 2 ? 'cascade-delay-3' : 'cascade-delay-4'}`}>
+                <div key={msg.id} className="space-y-4">
                   {msg.role === 'system' ? (
                     /* ✨ NUEVO: Mensajes del sistema (sin bocadillo) */
                     <div className="flex justify-center">
@@ -943,16 +946,22 @@ const ChatPage = () => {
                       rows={1}
                     />
                     
-                    {/* Gestor de imágenes simplificado */}
-                    <div className="absolute right-3 top-4">
+                    {/* Gestor de imágenes simplificado - Deshabilitado durante generación */}
+                    <div className="absolute right-3 bottom-4">
                       <ChatImageManager
                         key={imageManagerKey}
                         onImagesChange={handleSmartImagesChange}
-                        isVisible={showImageManager}
-                        onToggle={() => setShowImageManager(!showImageManager)}
+                        isVisible={showImageManager && !isGenerating}
+                        onToggle={() => {
+                          if (!isGenerating) {
+                            setShowImageManager(!showImageManager);
+                          }
+                        }}
                         onClear={() => {
-                          console.log('🧹 onClear llamado - Limpiando smartImages');
-                          setSmartImages([]);
+                          if (!isGenerating) {
+                            console.log('🧹 onClear llamado - Limpiando smartImages');
+                            setSmartImages([]);
+                          }
                         }}
                       />
                     </div>
