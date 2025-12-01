@@ -363,6 +363,24 @@ const ChatPage = () => {
     setMessage(`Edita esta imagen para mejorar: `);
   };
 
+  // Mostrar pantalla de carga mientras se cargan los proyectos
+  if (isLoadingProjects) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gradient-to-br from-[#0a0a0a] via-black to-[#1a0a1a]">
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
+            <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-pink-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1s' }} />
+          </div>
+          <div className="text-center">
+            <h2 className="text-2xl font-light text-purple-100 mb-2">Cargando tus Proyectos</h2>
+            <p className="text-purple-400/60">Preparando tu espacio creativo...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen bg-[#0a0a0a] text-white flex overflow-hidden flex-col">
 
@@ -926,7 +944,7 @@ const ChatPage = () => {
                         textarea.style.height = `${newHeight}px`;
                       }}
                       placeholder={(user?.plan === 'free' || user?.imagesRemaining <= 0) ? "Sin créditos - Actualiza tu plan para crear..." : "Describe lo que quieres crear..."}
-                      className={`w-full pr-16 py-3 px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[48px] overflow-y-auto ${
+                      className={`w-full pr-16 py-3 px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[48px] overflow-y-auto scrollbar-hide ${
                         (user?.plan === 'free' || user?.imagesRemaining <= 0)
                           ? 'bg-gray-800/50 border border-gray-600 text-gray-400 placeholder:text-gray-500 cursor-not-allowed'
                           : 'bg-purple-900/10 border border-purple-500/30 text-purple-100 placeholder:text-purple-400/50 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20'
@@ -946,24 +964,26 @@ const ChatPage = () => {
                       rows={1}
                     />
                     
-                    {/* Gestor de imágenes simplificado - Deshabilitado durante generación */}
-                    <div className="absolute right-3 bottom-4">
-                      <ChatImageManager
-                        key={imageManagerKey}
-                        onImagesChange={handleSmartImagesChange}
-                        isVisible={showImageManager && !isGenerating}
-                        onToggle={() => {
-                          if (!isGenerating) {
-                            setShowImageManager(!showImageManager);
-                          }
-                        }}
-                        onClear={() => {
-                          if (!isGenerating) {
-                            console.log('🧹 onClear llamado - Limpiando smartImages');
-                            setSmartImages([]);
-                          }
-                        }}
-                      />
+                    {/* Gestor de imágenes simplificado - Deshabilitado durante generación y escritura */}
+                    <div className="absolute right-3 bottom-3 z-10">
+                      <div className={`transition-opacity duration-200 ${isGenerating ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+                        <ChatImageManager
+                          key={imageManagerKey}
+                          onImagesChange={handleSmartImagesChange}
+                          isVisible={showImageManager && !isGenerating}
+                          onToggle={() => {
+                            if (!isGenerating) {
+                              setShowImageManager(!showImageManager);
+                            }
+                          }}
+                          onClear={() => {
+                            if (!isGenerating) {
+                              console.log('🧹 onClear llamado - Limpiando smartImages');
+                              setSmartImages([]);
+                            }
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                   
