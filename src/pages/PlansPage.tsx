@@ -277,7 +277,7 @@ const PlansPage = () => {
               {/* CTA Button */}
               <Button
                 onClick={() => handleSubscribe(plan.id, plan.price)}
-                disabled={loadingPlan === plan.id || (user?.plan === plan.id && plan.id !== 'free')}
+                disabled={loadingPlan === plan.id}
                 className={`w-full h-12 text-base font-semibold transition-all ${
                   user?.plan === plan.id && plan.id !== 'free'
                     ? 'bg-gray-600 cursor-not-allowed'
@@ -296,7 +296,7 @@ const PlansPage = () => {
                     <span>Procesando...</span>
                   </div>
                 ) : user?.plan === plan.id && plan.id !== 'free' ? (
-                  'Plan Actual'
+                  user.imagesRemaining <= 0 ? 'Renovar Créditos' : 'Plan Actual'
                 ) : plan.price === 0 ? (
                   'Empezar Gratis'
                 ) : (

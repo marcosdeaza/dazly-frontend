@@ -374,14 +374,14 @@ const ChatPage = () => {
           </div>
         )}
 
-        {/* Elegant Header */}
-        <div className="h-20 border-b border-purple-500/20 flex items-center justify-between px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl">
-          <div className="flex items-center space-x-4">
-            <img src={logo} alt="Dazly" className="h-8 w-auto" />
-            <div className="h-6 w-px bg-purple-400/30" />
+        {/* Elegant Header - Responsive */}
+        <div className="h-16 md:h-20 border-b border-purple-500/20 flex items-center justify-between px-4 md:px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl">
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <img src={logo} alt="Dazly" className="h-6 md:h-8 w-auto" />
+            <div className="hidden md:block h-6 w-px bg-purple-400/30" />
             <div>
               <h1 
-                className="text-lg font-light text-purple-100 cursor-pointer hover:text-purple-50 transition-colors"
+                className="text-sm md:text-lg font-light text-purple-100 cursor-pointer hover:text-purple-50 transition-colors truncate max-w-[150px] md:max-w-none"
                 onClick={() => {
                   const newName = prompt('Nuevo nombre del proyecto:', currentProject?.name || 'Nuevo Proyecto');
                   if (newName && newName.trim() && newName.trim() !== currentProject?.name) {
@@ -588,8 +588,8 @@ const ChatPage = () => {
                     </div>
                   ) : msg.role === 'user' ? (
                     <div className="flex justify-end">
-                      <div className="max-w-2xl">
-                        <div className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-xl border border-slate-600/30">
+                      <div className="max-w-2xl w-full md:w-auto">
+                        <div className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-sm rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-xl border border-slate-600/30">
                           <div className="space-y-3">
                             {/* Texto del mensaje */}
                             <p className="text-gray-100 font-normal leading-relaxed break-words whitespace-pre-wrap">
@@ -627,7 +627,7 @@ const ChatPage = () => {
                     </div>
                   ) : (
                     <div className="flex justify-start">
-                      <div className="max-w-3xl space-y-4">
+                      <div className="max-w-3xl w-full md:w-auto space-y-4">
                         {msg.content && (
                           <div>
                             <MarkdownMessage content={msg.content} />
@@ -880,13 +880,22 @@ const ChatPage = () => {
                           return; // No permitir escribir si es Plan Free o sin créditos
                         }
                         setMessage(e.target.value);
+                        
+                        // Auto-resize hasta 8 líneas
+                        const textarea = e.target;
+                        textarea.style.height = 'auto';
+                        const lineHeight = 24; // px por línea
+                        const maxLines = 8;
+                        const newHeight = Math.min(textarea.scrollHeight, lineHeight * maxLines);
+                        textarea.style.height = `${newHeight}px`;
                       }}
                       placeholder={(user?.plan === 'free' || user?.imagesRemaining <= 0) ? "Sin créditos - Actualiza tu plan para crear..." : "Describe lo que quieres crear..."}
-                      className={`w-full pr-16 py-3 px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[48px] max-h-[200px] ${
+                      className={`w-full pr-16 py-3 px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[48px] overflow-y-auto ${
                         (user?.plan === 'free' || user?.imagesRemaining <= 0)
                           ? 'bg-gray-800/50 border border-gray-600 text-gray-400 placeholder:text-gray-500 cursor-not-allowed'
                           : 'bg-purple-900/10 border border-purple-500/30 text-purple-100 placeholder:text-purple-400/50 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20'
                       }`}
+                      style={{ maxHeight: '192px' }} // 8 líneas * 24px
                       onKeyPress={(e) => {
                         if (user?.plan === 'free' || user?.imagesRemaining <= 0) {
                           e.preventDefault();
@@ -898,7 +907,7 @@ const ChatPage = () => {
                         }
                       }}
                       disabled={isGenerating}
-                      rows={2}
+                      rows={1}
                     />
                     
                     {/* Gestor de imágenes simplificado */}
