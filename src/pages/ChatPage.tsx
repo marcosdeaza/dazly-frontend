@@ -151,8 +151,11 @@ const ChatPage = () => {
     const messageContent = message.trim();
     const attachedImages = [...smartImages]; // Copia inmutable
     
-    // ✅ Limpiar el input inmediatamente
+    // ✅ Limpiar el input inmediatamente Y resetear altura del textarea
     setMessage('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     setIsGenerating(true);
     setGeneratingInProjectId(targetProjectId); // ✨ Marcar que se está generando en este proyecto
 
