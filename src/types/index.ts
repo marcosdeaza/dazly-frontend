@@ -56,21 +56,39 @@ export const PLANS: Plan[] = [
     name: 'Free',
     price: 0,
     images: 0,
-    features: ['Plan de demostración', 'Funciones limitadas', 'Actualiza para usar', 'Solo navegación']
+    features: [
+      'Explora la plataforma',
+      'Prueba funciones básicas',
+      'Sin compromiso',
+      'Perfecto para comenzar'
+    ]
   },
   {
     id: 'pulse',
     name: 'Pulse',
     price: 3.99,
     images: 50,
-    features: ['50 imágenes al mes', 'Generación avanzada', 'Calidad HD', 'Soporte prioritario']
+    features: [
+      '50 creaciones al mes',
+      'Calidad HD profesional',
+      'Generación en segundos',
+      'Chat inteligente con IA',
+      'Soporte por email'
+    ]
   },
   {
     id: 'flow',
     name: 'Flow',
     price: 9.99,
     images: 150,
-    features: ['150 imágenes al mes', 'Edición avanzada', 'Calidad 4K', 'Proyectos ilimitados', 'Sin marca de agua'],
+    features: [
+      '150 creaciones al mes',
+      'Calidad Ultra HD (4K)',
+      'Edición avanzada de imágenes',
+      'Proyectos ilimitados',
+      'Sin marca de agua',
+      'Velocidad prioritaria'
+    ],
     popular: true
   },
   {
@@ -78,7 +96,14 @@ export const PLANS: Plan[] = [
     name: 'Summit',
     price: 19.99,
     images: 350,
-    features: ['350 imágenes al mes', 'IA premium', 'Exportación sin límites', 'API access', 'Soporte 24/7'],
+    features: [
+      '350 creaciones al mes',
+      'Modelos de IA premium',
+      'Generación ultra-rápida',
+      'Estilos exclusivos',
+      'Historial completo',
+      'Soporte prioritario 24/7'
+    ],
     recommended: true
   },
   {
@@ -86,14 +111,28 @@ export const PLANS: Plan[] = [
     name: 'Peak',
     price: 39.99,
     images: 700,
-    features: ['700 imágenes al mes', 'Funciones experimentales', 'Renderizado ultra-rápido', 'Colaboración en equipo']
+    features: [
+      '700 creaciones al mes',
+      'Funciones experimentales',
+      'Procesamiento instantáneo',
+      'Colaboración en equipo',
+      'Exportación masiva',
+      'Acceso anticipado a novedades'
+    ]
   },
   {
     id: 'infinity',
     name: 'Infinity',
     price: 79.99,
     images: 1500,
-    features: ['1500 imágenes al mes', 'Acceso completo a la API', 'Integraciones personalizadas', 'Gerente de cuenta dedicado'],
+    features: [
+      '1500 creaciones al mes',
+      'Uso empresarial sin límites',
+      'Integraciones personalizadas',
+      'Capacitación del equipo',
+      'Gerente de cuenta dedicado',
+      'SLA garantizado'
+    ],
     enterprise: true
   }
 ];

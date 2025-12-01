@@ -74,8 +74,8 @@ const TermsPage = () => {
             <p className="text-gray-300">
               Para preguntas sobre estos términos, contáctanos en:
               <br />
-              <a href="mailto:support@dazly.art" className="text-primary hover:underline">
-                support@dazly.art
+              <a href="mailto:marcosdeaza007@gmail.com" className="text-primary hover:underline">
+                marcosdeaza007@gmail.com
               </a>
             </p>
           </section>
