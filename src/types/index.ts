@@ -86,7 +86,6 @@ export const PLANS: Plan[] = [
       'Calidad Ultra HD (4K)',
       'Edición avanzada de imágenes',
       'Proyectos ilimitados',
-      'Sin marca de agua',
       'Velocidad prioritaria'
     ],
     popular: true
