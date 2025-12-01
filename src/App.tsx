@@ -16,6 +16,8 @@ import AuthCallbackPage from './pages/AuthCallbackPage';
 import ChatPage from './pages/ChatPage';
 import PlansPage from './pages/PlansPage';
 import AccountPage from './pages/AccountPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { useUserStore } from './store/userStore';
 import { useAuthStore } from './store/authStore';
@@ -84,6 +86,8 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/callback" element={<AuthCallbackPage />} />
             <Route path="/plans" element={<PlansPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             
             {/* --- RUTAS PROTEGIDAS --- */}
             <Route path="/chat" element={

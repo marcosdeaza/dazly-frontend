@@ -84,27 +84,28 @@ const LoginPage = () => {
           </p>
         </div>
 
-        {/* --- ¡¡AQUÍ ESTÁ LO QUE FALTABA!! --- */}
-        <div className="space-y-4">
-          <Button variant="outline" className="w-full bg-transparent text-white hover:bg-white/10" asChild>
-            {/* Apunta al backend (8081) igual que en el registro */}
-            <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:8081'}/api/auth/google`}>
-              <span className="mr-2">G</span> Continuar con Google
-            </a>
-          </Button>
+        {/* --- GOOGLE OAUTH EN MODO TESTING --- */}
+        {/* Solo usuarios agregados en Google Cloud Console pueden usarlo */}
+        {true && (
+          <div className="space-y-4">
+            <Button variant="outline" className="w-full bg-transparent text-white hover:bg-white/10" asChild>
+              <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:8081'}/api/auth/google`}>
+                <span className="mr-2">G</span> Continuar con Google
+              </a>
+            </Button>
 
-          {/* Un divisor chulo */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-700" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-gray-900/50 px-2 text-gray-400">
-                O continúa con
-              </span>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-gray-700" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-gray-900/50 px-2 text-gray-400">
+                  O continúa con
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         {/* --- FIN DEL BLOQUE DE GOOGLE --- */}
 
 

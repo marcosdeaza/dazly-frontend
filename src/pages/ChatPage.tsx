@@ -105,7 +105,7 @@ const ChatPage = () => {
     const messageContent = message.trim();
     const attachedImages = [...smartImages]; // Copia inmutable
     
-    // Limpiar inmediatamente el input (solo texto)
+    // ✅ Limpiar el input inmediatamente
     setMessage('');
     setIsGenerating(true);
     setGeneratingInProjectId(targetProjectId); // ✨ Marcar que se está generando en este proyecto
@@ -115,7 +115,7 @@ const ChatPage = () => {
     setAbortController(controller);
 
     try {
-      // Agregar mensaje del usuario
+      // Agregar mensaje del usuario (este DEBE quedarse visible)
       addMessage({
         role: 'user',
         content: messageContent,
@@ -241,7 +241,7 @@ const ChatPage = () => {
           console.log('💳 Créditos actualizados desde servidor:', data.imagesRemaining);
         }
         
-        // LIMPIAR IMÁGENES SOLO DESPUÉS DEL ÉXITO
+        // LIMPIAR IMÁGENES SOLO DESPUÉS DEL ÉXITO (input ya está limpio)
         resetImageManager();
       } else {
         console.error('❌ Error en respuesta:', data);
@@ -255,19 +255,21 @@ const ChatPage = () => {
       if (error instanceof Error && error.name === 'AbortError') {
         console.log('🛑 Generación cancelada por el usuario');
         
-        // ✨ NUEVO: Mensaje limpio sin emoji
+        // ✨ Agregar mensaje solo si fue cancelación real
         addMessage({
           role: 'assistant',
           content: '_Generación detenida por el usuario_'
         });
         
-        // ✨ Sin notificación - solo mensaje en chat
       } else {
         // ✨ Solo mostrar error si es crítico
         console.error('Error:', error);
+        
+        // ✅ Restaurar el mensaje en el input si hay error (para que pueda reintentar)
+        setMessage(messageContent);
       }
       
-      // En caso de error también resetear para evitar estado inconsistente
+      // En caso de error también resetear imágenes para evitar estado inconsistente
       resetImageManager();
     } finally {
       setIsGenerating(false);
