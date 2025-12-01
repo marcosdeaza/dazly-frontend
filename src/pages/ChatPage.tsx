@@ -964,11 +964,11 @@ const ChatPage = () => {
                       rows={1}
                     />
                     
-                    {/* Gestor de imágenes simplificado - Deshabilitado durante generación y escritura */}
-                    <div className="absolute right-3 bottom-3 z-10">
-                      <div className={`transition-opacity duration-200 ${isGenerating ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+                    {/* Gestor de imágenes simplificado - Posición fija mejorada */}
+                    <div className="absolute right-2 bottom-2 z-20" style={{ pointerEvents: isGenerating ? 'none' : 'auto' }}>
+                      <div className={`transition-opacity duration-200 ${isGenerating ? 'opacity-30' : 'opacity-100'}`}>
                         <ChatImageManager
-                          key={imageManagerKey}
+                          key={`${imageManagerKey}-${currentProject?.id}`}
                           onImagesChange={handleSmartImagesChange}
                           isVisible={showImageManager && !isGenerating}
                           onToggle={() => {
@@ -980,6 +980,7 @@ const ChatPage = () => {
                             if (!isGenerating) {
                               console.log('🧹 onClear llamado - Limpiando smartImages');
                               setSmartImages([]);
+                              setImageManagerKey(prev => prev + 1);
                             }
                           }}
                         />

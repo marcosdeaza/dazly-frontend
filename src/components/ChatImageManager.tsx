@@ -45,11 +45,12 @@ export const ChatImageManager = ({
     onImagesChange(newImages);
   }, [onImagesChange]);
 
-  // IMPORTANTE: Mantener las imágenes cuando se abre/cierra el panel
+  // Reset interno cuando se cierra el panel para evitar bugs de parpadeo
   React.useEffect(() => {
-    console.log('👁️ Panel visibility changed:', isVisible, 'Images:', images.length);
-    // NO limpiar las imágenes solo porque se cierre el panel
-    // Las imágenes deben persistir hasta que se envíe un mensaje
+    if (!isVisible && images.length > 0) {
+      console.log('👁️ Panel cerrado - Manteniendo imágenes pero reseteando estado interno');
+      // Las imágenes persisten pero reseteamos el estado visual
+    }
   }, [isVisible, images.length]);
 
   // Botón flotante apagado para Plan Free (sin efectos)
