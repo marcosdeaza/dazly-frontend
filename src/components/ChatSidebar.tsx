@@ -19,6 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { toast } from 'sonner';
 
 interface SidebarProps {
   generatingInProjectId?: string | null;
@@ -48,10 +49,13 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
     // ✅ Verificar límite de proyectos ANTES de intentar crear
     const userPlan = user?.plan || 'free';
     const currentPlanInfo = PLANS.find(p => p.id === userPlan);
-    const maxProjects = currentPlanInfo?.maxProjects || 1;
+    const maxProjects = currentPlanInfo?.maxProjects || 0;
     
     if (projects.length >= maxProjects) {
-      alert(`❌ Límite alcanzado\n\nTu plan ${currentPlanInfo?.name || 'Free'} permite máximo ${maxProjects} proyecto${maxProjects > 1 ? 's' : ''}.\n\n📝 Elimina un proyecto existente o actualiza tu plan para crear más.`);
+      toast.error('Límite de proyectos alcanzado', {
+        description: `Tu plan ${currentPlanInfo?.name || 'Free'} permite máximo ${maxProjects} proyecto${maxProjects > 1 ? 's' : ''}. Elimina un proyecto existente o actualiza tu plan.`,
+        duration: 4000
+      });
       setIsCreatingProject(false);
       return;
     }
@@ -76,7 +80,10 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
       // ✅ Mostrar mensaje específico si es límite de proyectos
       if (error?.response?.status === 403) {
         const errorData = error.response.data;
-        alert(`❌ ${errorData.error}\n\n${errorData.message}`);
+        toast.error(errorData.error || 'Error al crear proyecto', {
+          description: errorData.message || 'No puedes crear más proyectos con tu plan actual',
+          duration: 4000
+        });
       }
       
       setIsCreatingProject(false); // ✅ Cerrar incluso si hay error

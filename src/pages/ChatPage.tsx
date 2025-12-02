@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useToast } from '@/components/ui/use-toast';
+import { toast as sonnerToast } from 'sonner';
 import { PLANS } from '@/types';
 import { Sidebar } from '@/components/ChatSidebar';
 import { AccountSettings } from '@/components/AccountSettings';
@@ -61,6 +62,8 @@ const ChatPage = () => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
+  // Usar sonnerToast como 'toast' para consistencia (más bonito)
+  const toastFn = sonnerToast;
   const navigate = useNavigate();
   
   const { user, updateCreditsFromServer, projects, updateProject } = useUserStore();
@@ -103,6 +106,84 @@ const ChatPage = () => {
     return () => container.removeEventListener('scroll', handleScroll);
   }, [messagesContainerRef.current]);
 
+  // ✨ NUEVO: Manejar Ctrl+V globalmente para pegar imágenes
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      // Solo procesar si no es un input/textarea (excepto nuestro textarea de mensaje)
+      const target = e.target as HTMLElement;
+      const isOurTextarea = target === textareaRef.current;
+      const isInputOrTextarea = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+      
+      // Si es otro input/textarea (no el nuestro), no procesar
+      if (isInputOrTextarea && !isOurTextarea) return;
+      
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      const imageFiles: File[] = [];
+      
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) {
+            imageFiles.push(file);
+          }
+        }
+      }
+
+      if (imageFiles.length > 0) {
+        e.preventDefault();
+        
+        // Verificar límite
+        const remainingSlots = 5 - smartImages.length;
+        if (remainingSlots <= 0) {
+          sonnerToast.error('Ya tienes 5 imágenes', {
+            description: 'Elimina alguna para añadir más',
+            duration: 3000
+          });
+          return;
+        }
+
+        // Procesar archivos
+        const filesToAdd = imageFiles.slice(0, remainingSlots);
+        const newImages: SmartImage[] = [];
+        
+        for (const file of filesToAdd) {
+          // Validar tipo
+          if (!file.type.startsWith('image/')) continue;
+          
+          // Validar tamaño (10MB)
+          if (file.size > 10 * 1024 * 1024) {
+            sonnerToast.error('Imagen muy grande', {
+              description: 'Las imágenes no deben superar 10MB',
+              duration: 3000
+            });
+            continue;
+          }
+
+          newImages.push({
+            id: `${Date.now()}-${Math.random()}`,
+            file,
+            url: URL.createObjectURL(file),
+            name: file.name
+          });
+        }
+
+        if (newImages.length > 0) {
+          setSmartImages(prev => [...prev, ...newImages]);
+          setShowImageManager(true); // Abrir panel automáticamente
+          sonnerToast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} pegada${newImages.length > 1 ? 's' : ''}`, {
+            duration: 2000
+          });
+        }
+      }
+    };
+
+    document.addEventListener('paste', handlePaste);
+    return () => document.removeEventListener('paste', handlePaste);
+  }, [smartImages]);
+
   const handleSendMessage = async () => {
     console.log('🔍 Current Project:', currentProject);
     console.log('🔍 Current Project ID:', currentProject?.id);
@@ -130,16 +211,14 @@ const ChatPage = () => {
         // ✅ Mostrar mensaje específico si es límite de proyectos
         if (error?.response?.status === 403) {
           const errorData = error.response?.data;
-          toast({
-            title: "Límite de proyectos alcanzado",
+          sonnerToast.error('Límite de proyectos alcanzado', {
             description: errorData?.message || "No puedes crear más proyectos con tu plan actual",
-            variant: "destructive"
+            duration: 4000
           });
         } else {
-          toast({
-            title: "Error",
+          sonnerToast.error('Error al crear proyecto', {
             description: "No se pudo crear el proyecto. Intenta de nuevo.",
-            variant: "destructive"
+            duration: 3000
           });
         }
         return;
