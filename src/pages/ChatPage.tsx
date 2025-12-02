@@ -41,9 +41,6 @@ interface SmartImage {
   file: File;
   url: string;
   name: string;
-  size: number;
-  type: string;
-  preview?: string;
 }
 
 const ChatPage = () => {
@@ -188,7 +185,7 @@ const ChatPage = () => {
           });
           
           imagesBase64.push({
-            mimeType: img.type,
+            mimeType: img.file.type,
             base64Data: base64
           });
         }
@@ -661,7 +658,7 @@ const ChatPage = () => {
                                 {msg.images.slice(0, 4).map((image, idx) => (
                                   <div key={image.id} className="relative group">
                                     <img
-                                      src={image.preview || image.url}
+                                      src={image.url}
                                       alt={image.name}
                                       className="w-full h-auto rounded-lg border border-slate-500/30"
                                       style={{
@@ -916,7 +913,7 @@ const ChatPage = () => {
                         {smartImages.slice(0, 3).map((image, idx) => (
                           <img
                             key={image.id}
-                            src={image.preview || image.url}
+                            src={image.url}
                             alt={image.name}
                             className="w-8 h-8 rounded object-cover"
                           />

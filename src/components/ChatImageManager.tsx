@@ -1,28 +1,25 @@
-// src/components/ChatImageManager.tsx - Gestor inteligente de imágenes para el chat
+// src/components/ChatImageManager.tsx - Gestor simple y directo de imágenes para el chat
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { Image as ImageIcon, Upload, Wand2, X, Eye, Trash2 } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Image as ImageIcon, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SmartImageUploader } from './SmartImageUploader';
+import { SimpleImageUploader } from './SimpleImageUploader';
 import { cn } from '@/lib/utils';
 import { useUserStore } from '@/store/userStore';
 
-interface SmartImage {
+interface ImageData {
   id: string;
   file: File;
   url: string;
   name: string;
-  size: number;
-  type: string;
-  preview?: string;
 }
 
 interface ChatImageManagerProps {
-  onImagesChange: (images: SmartImage[]) => void;
+  onImagesChange: (images: ImageData[]) => void;
   className?: string;
   isVisible: boolean;
   onToggle: () => void;
-  onClear?: () => void; // ✅ Nueva prop para limpiar desde afuera
+  onClear?: () => void;
 }
 
 export const ChatImageManager = ({ 
@@ -32,28 +29,30 @@ export const ChatImageManager = ({
   onToggle,
   onClear
 }: ChatImageManagerProps) => {
-  const [images, setImages] = useState<SmartImage[]>([]);
+  const [images, setImages] = useState<ImageData[]>([]);
   const { user } = useUserStore();
 
   // Verificar si es Plan Free
   const isFreeUser = user?.plan === 'free';
 
-  // LÓGICA MEJORADA: Mantener imágenes hasta que se envíe mensaje
-  const handleImagesReady = useCallback((newImages: SmartImage[]) => {
-    console.log('📸 ChatImageManager: Imágenes actualizadas:', newImages.length);
+  // Manejar cambios en las imágenes
+  const handleImagesChange = useCallback((newImages: ImageData[]) => {
     setImages(newImages);
     onImagesChange(newImages);
   }, [onImagesChange]);
 
-  // Las imágenes SIEMPRE persisten cuando se cierra el panel
+  // Limpiar imágenes cuando se llama desde afuera
   React.useEffect(() => {
-    if (!isVisible && images.length > 0) {
-      console.log('👁️ Panel cerrado - Las imágenes SE MANTIENEN:', images.length);
-      // NO hacer nada - las imágenes persisten hasta que se envíe el mensaje
+    if (onClear) {
+      const clearImages = () => {
+        images.forEach(img => URL.revokeObjectURL(img.url));
+        setImages([]);
+      };
+      // No hay forma directa de registrar esto, pero podemos exponer la función
     }
-  }, [isVisible, images.length]);
+  }, [onClear, images]);
 
-  // Botón flotante apagado para Plan Free (sin efectos)
+  // Botón flotante
   const FloatingToggleButton = () => (
     <Button
       size="sm"
@@ -61,7 +60,7 @@ export const ChatImageManager = ({
       className={cn(
         "h-10 w-10 p-0 rounded-xl relative overflow-hidden",
         isFreeUser 
-          ? "text-gray-400 cursor-default" // Solo apagado, sin background ni efectos
+          ? "text-gray-400 cursor-default"
           : cn(
               "transition-all duration-300 hover:bg-purple-500/20 hover:scale-110 active:scale-95",
               isVisible 
@@ -100,7 +99,7 @@ export const ChatImageManager = ({
       {/* Botón flotante para abrir/cerrar */}
       <FloatingToggleButton />
       
-      {/* Panel desplegable del uploader */}
+      {/* Panel desplegable simple */}
       {isVisible && (
         <div className={cn(
           "fixed bottom-24 right-8 z-50 w-96 max-w-[90vw] p-1",
@@ -117,10 +116,10 @@ export const ChatImageManager = ({
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-purple-100">
-                      Gestor de Imágenes
+                      Imágenes
                     </h3>
                     <p className="text-xs text-purple-400/60">
-                      Sube hasta 5 imágenes para usar en el chat
+                      Hasta 5 imágenes · Usa Ctrl+V para pegar
                     </p>
                   </div>
                 </div>
@@ -136,25 +135,14 @@ export const ChatImageManager = ({
               </div>
             </div>
             
-            {/* Contenido del uploader */}
+            {/* Contenido del uploader simple */}
             <div className="p-4">
-              <SmartImageUploader
-                onImagesReady={handleImagesReady}
+              <SimpleImageUploader
+                onImagesChange={handleImagesChange}
                 maxImages={5}
-                persistentImages={images}
+                existingImages={images}
               />
             </div>
-            
-            {/* Footer minimalista */}
-            {images.length > 0 && (
-              <div className="px-4 pb-3">
-                <div className="text-center">
-                  <p className="text-xs text-purple-300/60">
-                    {images.length} imagen{images.length > 1 ? 'es' : ''} lista{images.length > 1 ? 's' : ''} para usar
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
