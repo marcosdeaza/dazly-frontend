@@ -149,6 +149,10 @@ const ChatPage = () => {
         console.log(`📋 Total imágenes encontradas: ${imageFiles.length}`);
         e.preventDefault();
         
+        // Abrir panel y mostrar toast ANTES de actualizar estado
+        setShowImageManager(true);
+        setImageManagerKey(prev => prev + 1);
+        
         // Usar callback para obtener el valor más reciente de smartImages
         setSmartImages(currentImages => {
           console.log(`📋 smartImages actuales: ${currentImages.length}`);
@@ -194,21 +198,22 @@ const ChatPage = () => {
             const updated = [...currentImages, ...newImages];
             console.log('📸 smartImages actualizadas:', updated.length);
             
-            // Abrir panel y forzar actualización (fuera del setState)
-            setTimeout(() => {
-              setShowImageManager(true);
-              setImageManagerKey(prev => prev + 1);
-              sonnerToast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} pegada${newImages.length > 1 ? 's' : ''}`, {
-                duration: 2000
-              });
-            }, 0);
-            
             return updated;
           } else {
             console.log('📋 No se procesaron imágenes');
             return currentImages; // No cambiar
           }
         });
+        
+        // Toast después de actualizar (para tener el conteo correcto)
+        setTimeout(() => {
+          const addedCount = imageFiles.length;
+          if (addedCount > 0) {
+            sonnerToast.success(`${addedCount} imagen${addedCount > 1 ? 'es' : ''} añadida${addedCount > 1 ? 's' : ''}`, {
+              duration: 2000
+            });
+          }
+        }, 100);
       } else {
         console.log('📋 No se encontraron imágenes en el portapapeles');
       }
