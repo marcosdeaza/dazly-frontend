@@ -44,6 +44,7 @@ export interface Plan {
   name: string;
   price: number;
   images: number;
+  maxProjects: number; // ✨ Límite de proyectos
   features: string[];
   popular?: boolean;
   recommended?: boolean;
@@ -56,11 +57,12 @@ export const PLANS: Plan[] = [
     name: 'Free',
     price: 0,
     images: 0,
+    maxProjects: 0, // 🔒 Sin proyectos (solo vista previa)
     features: [
       'Explora la plataforma',
       'Prueba funciones básicas',
-      'Sin compromiso',
-      'Perfecto para comenzar'
+      'Sin proyectos',
+      'Sin compromiso'
     ]
   },
   {
@@ -68,10 +70,11 @@ export const PLANS: Plan[] = [
     name: 'Pulse',
     price: 3.99,
     images: 50,
+    maxProjects: 5, // 🔒 Máximo 5 proyectos
     features: [
       '50 creaciones al mes',
+      'Hasta 5 proyectos',
       'Calidad HD profesional',
-      'Generación en segundos',
       'Chat inteligente con IA',
       'Soporte por email'
     ]
@@ -81,11 +84,12 @@ export const PLANS: Plan[] = [
     name: 'Flow',
     price: 9.99,
     images: 150,
+    maxProjects: 10, // 🔒 Máximo 10 proyectos
     features: [
       '150 creaciones al mes',
+      'Hasta 10 proyectos',
       'Calidad Ultra HD (4K)',
       'Edición avanzada de imágenes',
-      'Proyectos ilimitados',
       'Velocidad prioritaria'
     ],
     popular: true
@@ -95,12 +99,13 @@ export const PLANS: Plan[] = [
     name: 'Summit',
     price: 19.99,
     images: 350,
+    maxProjects: 25, // 🔒 Máximo 25 proyectos
     features: [
       '350 creaciones al mes',
+      'Hasta 25 proyectos',
       'Modelos de IA premium',
       'Generación ultra-rápida',
       'Estilos exclusivos',
-      'Historial completo',
       'Soporte prioritario 24/7'
     ],
     recommended: true
@@ -110,13 +115,14 @@ export const PLANS: Plan[] = [
     name: 'Peak',
     price: 39.99,
     images: 700,
+    maxProjects: 50, // 🔒 Máximo 50 proyectos
     features: [
       '700 creaciones al mes',
+      'Hasta 50 proyectos',
       'Funciones experimentales',
       'Procesamiento instantáneo',
       'Colaboración en equipo',
-      'Exportación masiva',
-      'Acceso anticipado a novedades'
+      'Exportación masiva'
     ]
   },
   {
@@ -124,13 +130,14 @@ export const PLANS: Plan[] = [
     name: 'Infinity',
     price: 79.99,
     images: 1500,
+    maxProjects: 100, // 🔒 100 proyectos
     features: [
       '1500 creaciones al mes',
+      'Hasta 100 proyectos',
       'Uso empresarial sin límites',
       'Integraciones personalizadas',
       'Capacitación del equipo',
-      'Gerente de cuenta dedicado',
-      'SLA garantizado'
+      'Gerente de cuenta dedicado'
     ],
     enterprise: true
   }

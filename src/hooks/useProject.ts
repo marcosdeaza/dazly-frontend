@@ -60,8 +60,15 @@ export const useProject = () => {
       const serverProject = await addProject(newProject);
       setCurrentProject(serverProject || newProject);
       return serverProject || newProject;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creando proyecto:', error);
+      
+      // ✅ Si es límite de proyectos, propagar el error para que el componente lo maneje
+      if (error?.response?.status === 403) {
+        throw error;
+      }
+      
+      // Para otros errores, crear proyecto local
       setCurrentProject(newProject);
       return newProject;
     }

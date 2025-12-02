@@ -45,6 +45,17 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
   const createNewProject = async () => {
     if (!localNewProjectName.trim()) return;
 
+    // ✅ Verificar límite de proyectos ANTES de intentar crear
+    const userPlan = user?.plan || 'free';
+    const currentPlanInfo = PLANS.find(p => p.id === userPlan);
+    const maxProjects = currentPlanInfo?.maxProjects || 1;
+    
+    if (projects.length >= maxProjects) {
+      alert(`❌ Límite alcanzado\n\nTu plan ${currentPlanInfo?.name || 'Free'} permite máximo ${maxProjects} proyecto${maxProjects > 1 ? 's' : ''}.\n\n📝 Elimina un proyecto existente o actualiza tu plan para crear más.`);
+      setIsCreatingProject(false);
+      return;
+    }
+
     const project: Project = {
       id: crypto.randomUUID(),
       name: localNewProjectName.trim(),
@@ -59,8 +70,15 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
       setCurrentProject(savedProject || project);
       setLocalNewProjectName('');
       setIsCreatingProject(false); // ✅ Cerrar el formulario después de crear
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creando proyecto:', error);
+      
+      // ✅ Mostrar mensaje específico si es límite de proyectos
+      if (error?.response?.status === 403) {
+        const errorData = error.response.data;
+        alert(`❌ ${errorData.error}\n\n${errorData.message}`);
+      }
+      
       setIsCreatingProject(false); // ✅ Cerrar incluso si hay error
     }
   };
@@ -114,7 +132,7 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
         </div>
 
         {/* Usage Stats */}
-        <div className="p-4 bg-purple-900/10 border border-purple-500/20 rounded-xl backdrop-blur-sm">
+        <div className="p-4 bg-purple-900/10 border border-purple-500/20 rounded-xl backdrop-blur-sm space-y-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-purple-300/80 font-light">Plan actual</span>
             <Badge className={`text-xs ${
@@ -126,26 +144,46 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
             </Badge>
           </div>
           
+          {/* Proyectos */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-purple-300/80 font-light">Proyectos</span>
+              <span className="text-xs text-purple-200 font-medium">
+                {projects.length}/{currentPlan.maxProjects}
+              </span>
+            </div>
+            <div className="w-full bg-purple-900/30 rounded-full h-1.5">
+              <div 
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  projects.length >= currentPlan.maxProjects
+                    ? 'bg-gradient-to-r from-red-400 to-orange-400'
+                    : 'bg-gradient-to-r from-purple-400 to-pink-400'
+                }`}
+                style={{ 
+                  width: `${Math.max(5, (projects.length / currentPlan.maxProjects) * 100)}%` 
+                }}
+              />
+            </div>
+          </div>
+          
+          {/* Créditos */}
           {user?.plan === 'free' ? (
             <>
               <div className="flex items-center space-x-2 mb-2">
                 <Eye className="text-blue-400" size={16} />
-                <span className="text-lg font-light text-blue-200">Vista Previa</span>
+                <span className="text-sm font-light text-blue-200">Vista Previa</span>
               </div>
-              <div className="text-xs text-blue-400/60 mb-3 font-light">
-                Solo navegación y exploración
-              </div>
-              <div className="w-full bg-blue-900/30 rounded-full h-1.5">
-                <div className="bg-gradient-to-r from-blue-400 to-cyan-400 h-1.5 rounded-full w-full" />
+              <div className="text-xs text-blue-400/60 font-light">
+                Sin créditos · Actualiza tu plan
               </div>
             </>
           ) : (
             <>
-              <div className="text-2xl font-light text-purple-100 mb-1">
-                {user?.imagesRemaining || 0}
-              </div>
-              <div className="text-xs text-purple-400/60 mb-3 font-light">
-                de {currentPlan.images} imágenes restantes
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-purple-300/80 font-light">Créditos</span>
+                <span className="text-xs text-purple-200 font-medium">
+                  {user?.imagesRemaining || 0}/{currentPlan.images}
+                </span>
               </div>
               <div className="w-full bg-purple-900/30 rounded-full h-1.5">
                 <div 

@@ -254,9 +254,19 @@ const PlansPage = () => {
                   )}
                 </div>
 
-                <p className="text-lg font-semibold text-purple-400">
-                  {plan.images} imágenes/mes
-                </p>
+                {/* Key Stats */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-purple-300">{plan.images}</div>
+                    <div className="text-xs text-purple-400/70">Imágenes/mes</div>
+                  </div>
+                  <div className="bg-pink-500/10 border border-pink-500/30 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-pink-300">
+                      {plan.maxProjects === 0 ? '0' : plan.maxProjects}
+                    </div>
+                    <div className="text-xs text-pink-400/70">Proyectos</div>
+                  </div>
+                </div>
               </div>
 
               {/* Features */}

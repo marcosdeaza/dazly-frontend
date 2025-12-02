@@ -124,13 +124,24 @@ const ChatPage = () => {
         // createProject ya selecciona el proyecto automáticamente
         // Esperar un momento para que se actualice el estado
         await new Promise(resolve => setTimeout(resolve, 100));
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Error creando proyecto automático:', error);
-        toast({
-          title: "Error",
-          description: "No se pudo crear el proyecto. Intenta de nuevo.",
-          variant: "destructive"
-        });
+        
+        // ✅ Mostrar mensaje específico si es límite de proyectos
+        if (error?.response?.status === 403) {
+          const errorData = error.response?.data;
+          toast({
+            title: "Límite de proyectos alcanzado",
+            description: errorData?.message || "No puedes crear más proyectos con tu plan actual",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: "No se pudo crear el proyecto. Intenta de nuevo.",
+            variant: "destructive"
+          });
+        }
         return;
       }
     }
