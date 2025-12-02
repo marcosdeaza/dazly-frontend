@@ -20,6 +20,7 @@ interface ChatImageManagerProps {
   isVisible: boolean;
   onToggle: () => void;
   onClear?: () => void;
+  existingImages?: ImageData[]; // ✨ Recibir imágenes desde ChatPage (Ctrl+V)
 }
 
 export const ChatImageManager = ({ 
@@ -27,16 +28,24 @@ export const ChatImageManager = ({
   className,
   isVisible,
   onToggle,
-  onClear
+  onClear,
+  existingImages = []
 }: ChatImageManagerProps) => {
-  const [images, setImages] = useState<ImageData[]>([]);
+  const [images, setImages] = useState<ImageData[]>(existingImages);
   const { user } = useUserStore();
 
   // Verificar si es Plan Free
   const isFreeUser = user?.plan === 'free';
 
+  // ✨ Sincronizar con imágenes externas (Ctrl+V desde ChatPage)
+  React.useEffect(() => {
+    console.log('🔄 ChatImageManager: Sincronizando existingImages:', existingImages.length);
+    setImages(existingImages);
+  }, [existingImages]);
+
   // Manejar cambios en las imágenes
   const handleImagesChange = useCallback((newImages: ImageData[]) => {
+    console.log('🔄 ChatImageManager: handleImagesChange llamado con', newImages.length, 'imágenes');
     setImages(newImages);
     onImagesChange(newImages);
   }, [onImagesChange]);

@@ -15,15 +15,25 @@ interface SimpleImageUploaderProps {
   onImagesChange: (images: ImageData[]) => void;
   maxImages?: number;
   existingImages?: ImageData[];
+  onAddImages?: (files: File[]) => void; // ✨ Exponer función para agregar desde fuera
 }
 
 export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
   onImagesChange,
   maxImages = 5,
-  existingImages = []
+  existingImages = [],
+  onAddImages
 }) => {
   const [images, setImages] = useState<ImageData[]>(existingImages);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ✨ Exponer addImages para uso externo (Ctrl+V desde ChatPage)
+  React.useEffect(() => {
+    if (onAddImages) {
+      // Guardamos la referencia de addImages en el callback
+      (window as any).__dazlyAddImages = addImages;
+    }
+  }, [onAddImages]);
 
   // Actualizar imágenes cuando cambien las existentes
   useEffect(() => {

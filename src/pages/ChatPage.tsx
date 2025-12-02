@@ -171,8 +171,16 @@ const ChatPage = () => {
         }
 
         if (newImages.length > 0) {
-          setSmartImages(prev => [...prev, ...newImages]);
+          setSmartImages(prev => {
+            const updated = [...prev, ...newImages];
+            console.log('📸 Imágenes actualizadas:', updated.length);
+            return updated;
+          });
           setShowImageManager(true); // Abrir panel automáticamente
+          
+          // Forzar actualización del imageManagerKey para que se renderice
+          setImageManagerKey(prev => prev + 1);
+          
           sonnerToast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} pegada${newImages.length > 1 ? 's' : ''}`, {
             duration: 2000
           });
@@ -1062,6 +1070,7 @@ const ChatPage = () => {
                         <ChatImageManager
                           key={`${imageManagerKey}-${currentProject?.id}`}
                           onImagesChange={handleSmartImagesChange}
+                          existingImages={smartImages}
                           isVisible={showImageManager && !isGenerating}
                           onToggle={() => {
                             if (!isGenerating) {
