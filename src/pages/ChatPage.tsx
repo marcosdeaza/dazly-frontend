@@ -167,7 +167,10 @@ const ChatPage = () => {
           const filesToAdd = imageFiles.slice(0, remainingSlots);
           const newImages: SmartImage[] = [];
           
-          for (const file of filesToAdd) {
+          // ✅ Usar índice para IDs únicos garantizados
+          for (let i = 0; i < filesToAdd.length; i++) {
+            const file = filesToAdd[i];
+            
             // Validar tipo
             if (!file.type.startsWith('image/')) continue;
             
@@ -180,8 +183,9 @@ const ChatPage = () => {
               continue;
             }
 
+            // ✅ ID único con timestamp + índice + random
             newImages.push({
-              id: `${Date.now()}-${Math.random()}`,
+              id: `paste-${Date.now()}-${i}-${Math.random().toString(36).substr(2, 9)}`,
               file,
               url: URL.createObjectURL(file),
               name: file.name

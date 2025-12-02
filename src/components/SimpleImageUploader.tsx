@@ -45,27 +45,7 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
     onImagesChange(images);
   }, [images, onImagesChange]);
 
-  // Validar y procesar archivo
-  const processFile = useCallback((file: File): ImageData | null => {
-    // Validar tipo
-    if (!file.type.startsWith('image/')) {
-      toast.error('Solo se permiten imágenes');
-      return null;
-    }
-
-    // Validar tamaño (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error('La imagen no debe superar 10MB');
-      return null;
-    }
-
-    return {
-      id: `${Date.now()}-${Math.random()}`,
-      file,
-      url: URL.createObjectURL(file),
-      name: file.name
-    };
-  }, []);
+  // ✅ Ya no se necesita processFile - la validación está en addImages
 
   // Agregar imágenes
   const addImages = useCallback((files: File[]) => {
@@ -82,18 +62,38 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
     }
 
     const newImages: ImageData[] = [];
-    for (const file of files) {
-      const imageData = processFile(file);
-      if (imageData) {
-        newImages.push(imageData);
+    const timestamp = Date.now();
+    
+    // ✅ Usar índice para IDs únicos garantizados
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Validar tipo
+      if (!file.type.startsWith('image/')) {
+        toast.error('Solo se permiten imágenes');
+        continue;
       }
+
+      // Validar tamaño (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('La imagen no debe superar 10MB');
+        continue;
+      }
+
+      // ✅ ID único con timestamp + índice + random
+      newImages.push({
+        id: `upload-${timestamp}-${i}-${Math.random().toString(36).substr(2, 9)}`,
+        file,
+        url: URL.createObjectURL(file),
+        name: file.name
+      });
     }
 
     if (newImages.length > 0) {
       setImages(prev => [...prev, ...newImages]);
       toast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} añadida${newImages.length > 1 ? 's' : ''}`);
     }
-  }, [images.length, maxImages, processFile]);
+  }, [images.length, maxImages]);
 
   // Manejar selección de archivos
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
