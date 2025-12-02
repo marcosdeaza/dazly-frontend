@@ -32,6 +32,7 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   const [editingProject, setEditingProject] = useState<string | null>(null);
   const [editProjectName, setEditProjectName] = useState('');
+  const [showLimitDenied, setShowLimitDenied] = useState(false); // ✨ Efecto visual de negación
   
   const { 
     user, 
@@ -52,10 +53,9 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
     const maxProjects = currentPlanInfo?.maxProjects || 0;
     
     if (projects.length >= maxProjects) {
-      toast.error('Límite de proyectos alcanzado', {
-        description: `Tu plan ${currentPlanInfo?.name || 'Free'} permite máximo ${maxProjects} proyecto${maxProjects > 1 ? 's' : ''}. Elimina un proyecto existente o actualiza tu plan.`,
-        duration: 4000
-      });
+      // ❌ NO notificar - solo efecto visual de negación
+      setShowLimitDenied(true);
+      setTimeout(() => setShowLimitDenied(false), 600); // Duración de la animación
       setIsCreatingProject(false);
       return;
     }
@@ -77,13 +77,9 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
     } catch (error: any) {
       console.error('Error creando proyecto:', error);
       
-      // ✅ Mostrar mensaje específico si es límite de proyectos
+      // ✅ Error 403 = límite alcanzado, no mostrar nada (ya hay efecto visual)
       if (error?.response?.status === 403) {
-        const errorData = error.response.data;
-        toast.error(errorData.error || 'Error al crear proyecto', {
-          description: errorData.message || 'No puedes crear más proyectos con tu plan actual',
-          duration: 4000
-        });
+        // Sin notificación - solo efecto visual
       }
       
       setIsCreatingProject(false); // ✅ Cerrar incluso si hay error
@@ -132,9 +128,13 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
           <Button
             size="sm"
             onClick={() => setIsCreatingProject(true)}
-            className="h-8 w-8 p-0 rounded-full bg-purple-600/20 hover:bg-purple-500/30 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
+            className={`h-8 w-8 p-0 rounded-full border transition-all duration-300 ${
+              showLimitDenied
+                ? 'bg-red-600/40 border-red-500/60 animate-shake'
+                : 'bg-purple-600/20 hover:bg-purple-500/30 border-purple-500/30 hover:border-purple-400/50'
+            }`}
           >
-            <Plus className="h-4 w-4 text-purple-300" />
+            <Plus className={`h-4 w-4 transition-colors ${showLimitDenied ? 'text-red-300' : 'text-purple-300'}`} />
           </Button>
         </div>
 

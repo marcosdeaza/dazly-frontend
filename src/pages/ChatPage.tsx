@@ -109,88 +109,118 @@ const ChatPage = () => {
   // ✨ NUEVO: Manejar Ctrl+V globalmente para pegar imágenes
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
+      console.log('📋 Evento paste detectado');
+      console.log('📋 Target:', (e.target as HTMLElement)?.tagName);
+      
       // Solo procesar si no es un input/textarea (excepto nuestro textarea de mensaje)
       const target = e.target as HTMLElement;
       const isOurTextarea = target === textareaRef.current;
       const isInputOrTextarea = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
       
       // Si es otro input/textarea (no el nuestro), no procesar
-      if (isInputOrTextarea && !isOurTextarea) return;
+      if (isInputOrTextarea && !isOurTextarea) {
+        console.log('📋 Ignorando paste en otro input/textarea');
+        return;
+      }
       
       const items = e.clipboardData?.items;
-      if (!items) return;
+      console.log('📋 ClipboardData items:', items?.length);
+      
+      if (!items) {
+        console.log('📋 No hay items en clipboard');
+        return;
+      }
 
       const imageFiles: File[] = [];
       
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
+        console.log(`📋 Item ${i}: type=${item.type}, kind=${item.kind}`);
         if (item.type.startsWith('image/')) {
           const file = item.getAsFile();
           if (file) {
+            console.log(`📋 Imagen encontrada: ${file.name}, size=${file.size}`);
             imageFiles.push(file);
           }
         }
       }
 
       if (imageFiles.length > 0) {
+        console.log(`📋 Total imágenes encontradas: ${imageFiles.length}`);
         e.preventDefault();
         
-        // Verificar límite
-        const remainingSlots = 5 - smartImages.length;
-        if (remainingSlots <= 0) {
-          sonnerToast.error('Ya tienes 5 imágenes', {
-            description: 'Elimina alguna para añadir más',
-            duration: 3000
-          });
-          return;
-        }
-
-        // Procesar archivos
-        const filesToAdd = imageFiles.slice(0, remainingSlots);
-        const newImages: SmartImage[] = [];
-        
-        for (const file of filesToAdd) {
-          // Validar tipo
-          if (!file.type.startsWith('image/')) continue;
+        // Usar callback para obtener el valor más reciente de smartImages
+        setSmartImages(currentImages => {
+          console.log(`📋 smartImages actuales: ${currentImages.length}`);
           
-          // Validar tamaño (10MB)
-          if (file.size > 10 * 1024 * 1024) {
-            sonnerToast.error('Imagen muy grande', {
-              description: 'Las imágenes no deben superar 10MB',
+          const remainingSlots = 5 - currentImages.length;
+          console.log(`📋 Slots disponibles: ${remainingSlots}`);
+          
+          if (remainingSlots <= 0) {
+            sonnerToast.error('Ya tienes 5 imágenes', {
+              description: 'Elimina alguna para añadir más',
               duration: 3000
             });
-            continue;
+            return currentImages; // No cambiar
           }
 
-          newImages.push({
-            id: `${Date.now()}-${Math.random()}`,
-            file,
-            url: URL.createObjectURL(file),
-            name: file.name
-          });
-        }
+          // Procesar archivos
+          const filesToAdd = imageFiles.slice(0, remainingSlots);
+          const newImages: SmartImage[] = [];
+          
+          for (const file of filesToAdd) {
+            // Validar tipo
+            if (!file.type.startsWith('image/')) continue;
+            
+            // Validar tamaño (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+              sonnerToast.error('Imagen muy grande', {
+                description: 'Las imágenes no deben superar 10MB',
+                duration: 3000
+              });
+              continue;
+            }
 
-        if (newImages.length > 0) {
-          setSmartImages(prev => {
-            const updated = [...prev, ...newImages];
-            console.log('📸 Imágenes actualizadas:', updated.length);
+            newImages.push({
+              id: `${Date.now()}-${Math.random()}`,
+              file,
+              url: URL.createObjectURL(file),
+              name: file.name
+            });
+          }
+
+          if (newImages.length > 0) {
+            console.log(`📋 Agregando ${newImages.length} imágenes`);
+            const updated = [...currentImages, ...newImages];
+            console.log('📸 smartImages actualizadas:', updated.length);
+            
+            // Abrir panel y forzar actualización (fuera del setState)
+            setTimeout(() => {
+              setShowImageManager(true);
+              setImageManagerKey(prev => prev + 1);
+              sonnerToast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} pegada${newImages.length > 1 ? 's' : ''}`, {
+                duration: 2000
+              });
+            }, 0);
+            
             return updated;
-          });
-          setShowImageManager(true); // Abrir panel automáticamente
-          
-          // Forzar actualización del imageManagerKey para que se renderice
-          setImageManagerKey(prev => prev + 1);
-          
-          sonnerToast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} pegada${newImages.length > 1 ? 's' : ''}`, {
-            duration: 2000
-          });
-        }
+          } else {
+            console.log('📋 No se procesaron imágenes');
+            return currentImages; // No cambiar
+          }
+        });
+      } else {
+        console.log('📋 No se encontraron imágenes en el portapapeles');
       }
     };
 
+    console.log('📋 Registrando listener de paste');
     document.addEventListener('paste', handlePaste);
-    return () => document.removeEventListener('paste', handlePaste);
-  }, [smartImages]);
+    return () => {
+      console.log('📋 Removiendo listener de paste');
+      document.removeEventListener('paste', handlePaste);
+    };
+  }, []); // ✅ Sin dependencias - se registra solo una vez
 
   const handleSendMessage = async () => {
     console.log('🔍 Current Project:', currentProject);
