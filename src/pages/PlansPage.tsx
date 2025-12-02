@@ -363,7 +363,11 @@ const PlansPage = () => {
           <p className="text-gray-400 mb-6">
             ¿Tienes más preguntas? Estamos aquí para ayudarte.
           </p>
-          <Button variant="outline" className="px-8 py-3">
+          <Button 
+            variant="outline" 
+            className="px-8 py-3"
+            onClick={() => window.open('https://ig.me/m/dazly.art', '_blank')}
+          >
             Contactar Soporte
           </Button>
         </div>
