@@ -56,7 +56,6 @@ const ChatPage = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [smartImages, setSmartImages] = useState<SmartImage[]>([]);
   const [showImageManager, setShowImageManager] = useState(false);
-  const [imageManagerKey, setImageManagerKey] = useState(0);
   const [showProjects, setShowProjects] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -146,8 +145,8 @@ const ChatPage = () => {
         console.log(`📋 Total imágenes encontradas: ${imageFiles.length}`);
         e.preventDefault();
         
-        // Abrir panel inmediatamente
-        setShowImageManager(true);
+        // ✅ NO abrir el panel automáticamente - solo agregar las imágenes
+        // El usuario puede abrir el panel manualmente si quiere ver las imágenes
         
         // Usar callback para obtener el valor más reciente de smartImages
         setSmartImages(currentImages => {
@@ -448,14 +447,8 @@ const ChatPage = () => {
   // Nueva función simple para resetear el gestor de imágenes
   const resetImageManager = () => {
     console.log('🧹 Reseteando gestor de imágenes - LIMPIEZA TOTAL');
-    // ✅ PRIMERO limpiar el estado
+    // ✅ Limpiar el estado de imágenes
     setSmartImages([]);
-    // ✅ LUEGO forzar recreación del componente
-    setImageManagerKey(prev => {
-      const newKey = prev + 1;
-      console.log(`✅ ImageManagerKey: ${prev} → ${newKey}`);
-      return newKey;
-    });
   };
 
   const currentPlan = PLANS.find(p => p.id === user?.plan) || PLANS[0];
@@ -1091,7 +1084,6 @@ const ChatPage = () => {
                     <div className="absolute right-2 bottom-2 z-20" style={{ pointerEvents: isGenerating ? 'none' : 'auto' }}>
                       <div className={`transition-opacity duration-200 ${isGenerating ? 'opacity-30' : 'opacity-100'}`}>
                         <ChatImageManager
-                          key={`${imageManagerKey}-${currentProject?.id}`}
                           onImagesChange={handleSmartImagesChange}
                           existingImages={smartImages}
                           isVisible={showImageManager && !isGenerating}
@@ -1104,7 +1096,6 @@ const ChatPage = () => {
                             if (!isGenerating) {
                               console.log('🧹 onClear llamado - Limpiando smartImages');
                               setSmartImages([]);
-                              setImageManagerKey(prev => prev + 1);
                             }
                           }}
                         />

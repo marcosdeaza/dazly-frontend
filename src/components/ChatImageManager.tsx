@@ -31,35 +31,21 @@ export const ChatImageManager = ({
   onClear,
   existingImages = []
 }: ChatImageManagerProps) => {
-  const [images, setImages] = useState<ImageData[]>(existingImages);
   const { user } = useUserStore();
 
   // Verificar si es Plan Free
   const isFreeUser = user?.plan === 'free';
 
-  // ✨ Sincronizar con imágenes externas (Ctrl+V desde ChatPage)
-  React.useEffect(() => {
-    console.log('🔄 ChatImageManager: Sincronizando existingImages:', existingImages.length);
-    setImages(existingImages);
-  }, [existingImages]);
+  // ✅ NO mantener estado local - usar directamente existingImages
+  // Esto evita desincronización entre el estado padre y el componente
 
   // Manejar cambios en las imágenes
   const handleImagesChange = useCallback((newImages: ImageData[]) => {
     console.log('🔄 ChatImageManager: handleImagesChange llamado con', newImages.length, 'imágenes');
-    setImages(newImages);
     onImagesChange(newImages);
   }, [onImagesChange]);
 
-  // Limpiar imágenes cuando se llama desde afuera
-  React.useEffect(() => {
-    if (onClear) {
-      const clearImages = () => {
-        images.forEach(img => URL.revokeObjectURL(img.url));
-        setImages([]);
-      };
-      // No hay forma directa de registrar esto, pero podemos exponer la función
-    }
-  }, [onClear, images]);
+  // ✅ Eliminado - la limpieza se maneja desde el padre
 
   // Botón flotante
   const FloatingToggleButton = () => (
@@ -81,10 +67,10 @@ export const ChatImageManager = ({
       title={isFreeUser ? "Plan Free - Actualiza para usar" : (isVisible ? "Cerrar gestor de imágenes" : "Abrir gestor de imágenes")}
     >
       <div className="relative">
-        {images.length > 0 && (
+        {existingImages.length > 0 && (
           <div className="absolute -top-2 -right-2 h-5 w-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
             <span className="text-xs text-white font-bold">
-              {images.length}
+              {existingImages.length}
             </span>
           </div>
         )}
@@ -97,7 +83,7 @@ export const ChatImageManager = ({
       </div>
       
       {/* Efecto de brillo cuando hay imágenes */}
-      {images.length > 0 && (
+      {existingImages.length > 0 && (
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl" />
       )}
     </Button>
@@ -149,7 +135,7 @@ export const ChatImageManager = ({
               <SimpleImageUploader
                 onImagesChange={handleImagesChange}
                 maxImages={5}
-                existingImages={images}
+                existingImages={existingImages}
               />
             </div>
           </div>
