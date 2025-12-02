@@ -1,5 +1,5 @@
 // src/components/SimpleImageUploader.tsx - Sistema simple de carga de imágenes con Ctrl+V
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { ImagePlus, X, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -24,32 +24,12 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
   existingImages = [],
   onAddImages
 }) => {
-  const [images, setImages] = useState<ImageData[]>(existingImages);
+  // ✅ NO mantener estado local - usar directamente existingImages del padre
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // ✨ Exponer addImages para uso externo (Ctrl+V desde ChatPage)
-  React.useEffect(() => {
-    if (onAddImages) {
-      // Guardamos la referencia de addImages en el callback
-      (window as any).__dazlyAddImages = addImages;
-    }
-  }, [onAddImages]);
-
-  // Actualizar imágenes cuando cambien las existentes
-  useEffect(() => {
-    setImages(existingImages);
-  }, [existingImages]);
-
-  // Notificar cambios
-  useEffect(() => {
-    onImagesChange(images);
-  }, [images, onImagesChange]);
-
-  // ✅ Ya no se necesita processFile - la validación está en addImages
 
   // Agregar imágenes
   const addImages = useCallback((files: File[]) => {
-    const remainingSlots = maxImages - images.length;
+    const remainingSlots = maxImages - existingImages.length;
     
     if (remainingSlots <= 0) {
       toast.error(`Ya tienes ${maxImages} imágenes. Elimina alguna para añadir más.`);
@@ -90,10 +70,11 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
     }
 
     if (newImages.length > 0) {
-      setImages(prev => [...prev, ...newImages]);
+      // ✅ Notificar al padre con las nuevas imágenes agregadas
+      onImagesChange([...existingImages, ...newImages]);
       toast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} añadida${newImages.length > 1 ? 's' : ''}`);
     }
-  }, [images.length, maxImages]);
+  }, [existingImages, maxImages, onImagesChange]);
 
   // Manejar selección de archivos
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,20 +92,18 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
 
   // Eliminar imagen
   const removeImage = useCallback((id: string) => {
-    setImages(prev => {
-      const updated = prev.filter(img => img.id !== id);
-      // Liberar URL del objeto
-      const removed = prev.find(img => img.id === id);
-      if (removed) {
-        URL.revokeObjectURL(removed.url);
-      }
-      return updated;
-    });
-  }, []);
+    const updated = existingImages.filter(img => img.id !== id);
+    // Liberar URL del objeto
+    const removed = existingImages.find(img => img.id === id);
+    if (removed) {
+      URL.revokeObjectURL(removed.url);
+    }
+    onImagesChange(updated);
+  }, [existingImages, onImagesChange]);
 
   // Abrir selector de archivos
   const openFileSelector = () => {
-    if (images.length >= maxImages) {
+    if (existingImages.length >= maxImages) {
       toast.error(`Ya tienes ${maxImages} imágenes. Elimina alguna para añadir más.`);
       return;
     }
@@ -147,13 +126,13 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
         <Button
           type="button"
           onClick={openFileSelector}
-          disabled={images.length >= maxImages}
+          disabled={existingImages.length >= maxImages}
           className="w-full h-12 bg-purple-600/20 hover:bg-purple-600/30 border-2 border-dashed border-purple-500/40 hover:border-purple-500/60 text-purple-300 hover:text-purple-200 transition-all duration-200"
         >
           <ImagePlus className="h-5 w-5 mr-2" />
-          {images.length >= maxImages 
+          {existingImages.length >= maxImages 
             ? `Límite alcanzado (${maxImages} imágenes)`
-            : `Seleccionar imágenes (${images.length}/${maxImages})`
+            : `Seleccionar imágenes (${existingImages.length}/${maxImages})`
           }
         </Button>
         
@@ -163,9 +142,9 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
       </div>
 
       {/* Grid de imágenes */}
-      {images.length > 0 && (
+      {existingImages.length > 0 && (
         <div className="grid grid-cols-3 gap-2">
-          {images.map((image) => (
+          {existingImages.map((image) => (
             <div
               key={image.id}
               className="relative group aspect-square rounded-lg overflow-hidden bg-purple-900/20 border border-purple-500/30"
@@ -201,16 +180,16 @@ export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
       )}
 
       {/* Info adicional */}
-      {images.length > 0 && (
+      {existingImages.length > 0 && (
         <div className="flex items-center justify-between text-xs text-purple-400/60 pt-2 border-t border-purple-500/20">
-          <span>{images.length} imagen{images.length !== 1 ? 'es' : ''} seleccionada{images.length !== 1 ? 's' : ''}</span>
+          <span>{existingImages.length} imagen{existingImages.length !== 1 ? 'es' : ''} seleccionada{existingImages.length !== 1 ? 's' : ''}</span>
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={() => {
-              images.forEach(img => URL.revokeObjectURL(img.url));
-              setImages([]);
+              existingImages.forEach(img => URL.revokeObjectURL(img.url));
+              onImagesChange([]);
               toast.info('Todas las imágenes eliminadas');
             }}
             className="h-6 text-xs text-red-400 hover:text-red-300"
