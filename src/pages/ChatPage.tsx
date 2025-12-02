@@ -110,7 +110,6 @@ const ChatPage = () => {
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
       console.log('📋 Evento paste detectado');
-      console.log('📋 Target:', (e.target as HTMLElement)?.tagName);
       
       // Solo procesar si no es un input/textarea (excepto nuestro textarea de mensaje)
       const target = e.target as HTMLElement;
@@ -124,7 +123,6 @@ const ChatPage = () => {
       }
       
       const items = e.clipboardData?.items;
-      console.log('📋 ClipboardData items:', items?.length);
       
       if (!items) {
         console.log('📋 No hay items en clipboard');
@@ -135,7 +133,6 @@ const ChatPage = () => {
       
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        console.log(`📋 Item ${i}: type=${item.type}, kind=${item.kind}`);
         if (item.type.startsWith('image/')) {
           const file = item.getAsFile();
           if (file) {
@@ -149,9 +146,8 @@ const ChatPage = () => {
         console.log(`📋 Total imágenes encontradas: ${imageFiles.length}`);
         e.preventDefault();
         
-        // Abrir panel y mostrar toast ANTES de actualizar estado
+        // Abrir panel inmediatamente
         setShowImageManager(true);
-        setImageManagerKey(prev => prev + 1);
         
         // Usar callback para obtener el valor más reciente de smartImages
         setSmartImages(currentImages => {
@@ -198,22 +194,14 @@ const ChatPage = () => {
             const updated = [...currentImages, ...newImages];
             console.log('📸 smartImages actualizadas:', updated.length);
             
+            // ✅ SIN NOTIFICACIÓN - Pegado silencioso
+            
             return updated;
           } else {
             console.log('📋 No se procesaron imágenes');
             return currentImages; // No cambiar
           }
         });
-        
-        // Toast después de actualizar (para tener el conteo correcto)
-        setTimeout(() => {
-          const addedCount = imageFiles.length;
-          if (addedCount > 0) {
-            sonnerToast.success(`${addedCount} imagen${addedCount > 1 ? 'es' : ''} añadida${addedCount > 1 ? 's' : ''}`, {
-              duration: 2000
-            });
-          }
-        }, 100);
       } else {
         console.log('📋 No se encontraron imágenes en el portapapeles');
       }
