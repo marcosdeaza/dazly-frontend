@@ -84,28 +84,16 @@ const LoginPage = () => {
           </p>
         </div>
 
-        {/* --- GOOGLE OAUTH TEMPORALMENTE DESHABILITADO --- */}
-        {/* PARA HABILITAR: Cambiar false por true y configurar Google OAuth */}
-        {/* Código original comentado para tu colega:
-        <Button variant="outline" className="w-full bg-transparent text-white hover:bg-white/10" asChild>
-          <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:8081'}/api/auth/google`}>
-            <span className="mr-2">G</span> Continuar con Google
-          </a>
-        </Button>
-        */}
+        {/* --- GOOGLE OAUTH ACTIVADO --- */}
         <div className="space-y-4">
           <Button 
             variant="outline" 
             className="w-full bg-transparent text-white hover:bg-white/10"
-            onClick={() => {
-              toast({
-                title: "Login con Google no disponible",
-                description: "Esta función estará disponible próximamente.",
-                duration: 3000
-              });
-            }}
+            asChild
           >
-            <span className="mr-2">G</span> Continuar con Google
+            <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:8081'}/api/auth/google`}>
+              <span className="mr-2">G</span> Continuar con Google
+            </a>
           </Button>
 
           <div className="relative">
