@@ -502,10 +502,10 @@ const ChatPage = () => {
   }
 
   return (
-    <div className="h-screen bg-[#0a0a0a] text-white flex overflow-hidden flex-col">
+    <div className="h-screen bg-[#0a0a0a] text-white flex overflow-hidden flex-col w-full max-w-full">
 
       {/* Contenedor principal */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden w-full">
         {/* Sidebar con ancho fijo - Solo visible en desktop */}
         <div className="hidden md:block w-80 flex-shrink-0">
           <Sidebar 
@@ -515,7 +515,7 @@ const ChatPage = () => {
         </div>
         
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col relative">
+        <div className="flex-1 flex flex-col relative w-full min-w-0">
         
         {/* Plan Free Banner - Always visible for free users */}
         {user?.plan === 'free' && (
@@ -539,7 +539,7 @@ const ChatPage = () => {
         )}
 
         {/* Elegant Header - Responsive */}
-        <div className="h-14 md:h-20 border-b border-purple-500/20 flex items-center justify-between px-3 md:px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl">
+        <div className="h-14 md:h-20 border-b border-purple-500/20 flex items-center justify-between px-3 md:px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl w-full">
           <div className="flex items-center space-x-2 md:space-x-4">
             {/* Botón hamburguesa solo en móvil */}
             <Sheet>
@@ -552,7 +552,7 @@ const ChatPage = () => {
                   <Menu size={20} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-80 bg-[#0a0a0a] border-purple-500/20 backdrop-blur-xl p-0">
+              <SheetContent side="left" className="w-[85vw] max-w-80 bg-[#0a0a0a] border-purple-500/20 backdrop-blur-xl p-0">
                 <Sidebar 
                   generatingInProjectId={generatingInProjectId}
                   projectsWithNewMessages={projectsWithNewMessages}
@@ -641,7 +641,7 @@ const ChatPage = () => {
                   </Avatar>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-80 bg-[#0a0a0a] border-purple-500/20 backdrop-blur-xl">
+              <SheetContent side="right" className="w-[85vw] max-w-80 bg-[#0a0a0a] border-purple-500/20 backdrop-blur-xl">
                 <div className="space-y-6">
                   <div className="text-center pt-6">
                     <Avatar className="h-20 w-20 mx-auto mb-4 ring-2 ring-purple-400/30">
@@ -699,7 +699,7 @@ const ChatPage = () => {
         </div>
 
         {/* Messages Area - Limpio y Espacioso */}
-        <ScrollArea className="flex-1 px-3 md:px-6 relative">
+        <ScrollArea className="flex-1 px-3 md:px-6 relative w-full overflow-x-hidden">
           {/* Botón para bajar al final */}
           {showScrollButton && (
             <button
@@ -710,25 +710,25 @@ const ChatPage = () => {
               <ArrowDown size={20} className="md:w-6 md:h-6" />
             </button>
           )}
-          <div ref={messagesContainerRef} className="max-w-4xl mx-auto space-y-4 md:space-y-8 py-4 md:py-8">
+          <div ref={messagesContainerRef} className="w-full max-w-4xl mx-auto space-y-4 md:space-y-8 py-4 md:py-8">
             {!currentProject?.messages?.length ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="text-center max-w-4xl w-full">
-                  <div className="mb-8 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="flex items-center justify-center mb-8">
-                        <img src={logo} alt="Dazly" className="h-24 w-auto opacity-90" />
+              <div className="flex items-center justify-center py-6 md:py-12 px-2">
+                <div className="text-center w-full max-w-4xl">
+                  <div className="mb-6 md:mb-8 flex items-center justify-center">
+                    <div className="text-center px-4">
+                      <div className="flex items-center justify-center mb-6 md:mb-8">
+                        <img src={logo} alt="Dazly" className="h-16 md:h-24 w-auto opacity-90" />
                       </div>
-                      <h2 className="text-3xl font-light text-purple-100 mb-3">
+                      <h2 className="text-xl md:text-3xl font-light text-purple-100 mb-2 md:mb-3">
                         Dazly Professional Sandbox
                       </h2>
-                      <p className="text-purple-300/60 leading-relaxed max-w-md">
+                      <p className="text-sm md:text-base text-purple-300/60 leading-relaxed max-w-md mx-auto">
                         Crea, edita y desarrolla imágenes profesionales con IA. Desde marketing hasta arte, todo en un solo lugar.
                       </p>
                     </div>
                   </div>
                   
-                  <div className="grid md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 px-2">
                     {[
                       {
                         icon: MarketingIcon,
@@ -781,8 +781,8 @@ const ChatPage = () => {
                     </div>
                   ) : msg.role === 'user' ? (
                     <div className="flex justify-end">
-                      <div className="max-w-2xl w-full md:w-auto">
-                        <div className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-sm rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-xl border border-slate-600/30">
+                      <div className="w-full max-w-2xl md:w-auto">
+                        <div className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-sm rounded-xl md:rounded-2xl px-3 md:px-6 py-2.5 md:py-4 shadow-xl border border-slate-600/30">
                           <div className="space-y-3">
                             {/* Texto del mensaje */}
                             <p className="text-gray-100 font-normal leading-relaxed break-words whitespace-pre-wrap">
@@ -820,7 +820,7 @@ const ChatPage = () => {
                     </div>
                   ) : (
                     <div className="flex justify-start">
-                      <div className="max-w-3xl w-full md:w-auto space-y-4">
+                      <div className="w-full max-w-3xl md:w-auto space-y-3 md:space-y-4">
                         {msg.content && (
                           <div>
                             <MarkdownMessage content={msg.content} />
@@ -990,8 +990,8 @@ const ChatPage = () => {
             {/* ✨ MEJORADO: Animación minimalista de generación */}
             {isGenerating && generatingInProjectId === currentProject?.id && (
               <div className="flex justify-start animate-fade-in-down">
-                <div className="max-w-2xl w-full">
-                  <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-md rounded-2xl px-6 py-4 border border-purple-500/30 shadow-lg shadow-purple-500/10">
+                <div className="w-full max-w-2xl">
+                  <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-md rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 border border-purple-500/30 shadow-lg shadow-purple-500/10">
                     <div className="flex items-center space-x-4">
                       <div className="relative">
                         <div className="animate-spin h-6 w-6 border-2 border-purple-400/30 border-t-purple-400 rounded-full"></div>
@@ -1012,23 +1012,25 @@ const ChatPage = () => {
         </ScrollArea>
 
         {/* Elegant Input Area */}
-        <div className="border-t border-purple-500/20 bg-gradient-to-t from-[#0a0a0a] to-[#0a0a0a]/95 backdrop-blur-xl">
-          <div className="max-w-4xl mx-auto px-3 md:px-8 py-3 md:py-6">
+        <div className="border-t border-purple-500/20 bg-gradient-to-t from-[#0a0a0a] to-[#0a0a0a]/95 backdrop-blur-xl w-full">
+          <div className="w-full max-w-4xl mx-auto px-3 md:px-8 py-3 md:py-6">
             {/* Credits Warning */}
             {(user?.imagesRemaining || 0) <= 0 && (
-              <div className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 backdrop-blur-sm">
-                <div className="flex items-center justify-center space-x-2">
-                  <BoltIcon className="text-red-400" size={16} />
-                  <p className="text-sm text-red-300 font-light">
-                    Sin créditos disponibles.
-                    <Button 
-                      variant="link" 
-                      className="p-0 ml-2 h-auto text-red-200 underline hover:text-white transition-colors"
-                      onClick={() => navigate('/plans')}
-                    >
-                      Actualizar plan
-                    </Button>
-                  </p>
+              <div className="mb-3 md:mb-4 p-3 md:p-4 rounded-lg md:rounded-xl bg-red-500/10 border border-red-500/30 backdrop-blur-sm">
+                <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-2 text-center">
+                  <div className="flex items-center space-x-2">
+                    <BoltIcon className="text-red-400" size={16} />
+                    <p className="text-xs md:text-sm text-red-300 font-light">
+                      Sin créditos disponibles.
+                    </p>
+                  </div>
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-xs md:text-sm text-red-200 underline hover:text-white transition-colors"
+                    onClick={() => navigate('/plans')}
+                  >
+                    Actualizar plan
+                  </Button>
                 </div>
               </div>
             )}
