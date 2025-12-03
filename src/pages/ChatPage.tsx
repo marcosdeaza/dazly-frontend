@@ -1,7 +1,7 @@
 // src/pages/ChatPage.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Settings, User, CreditCard, History, Eye, X, ArrowDown } from 'lucide-react';
+import { Settings, User, CreditCard, History, Eye, X, ArrowDown, Menu } from 'lucide-react';
 import { useUserStore } from '@/store/userStore';
 import { useAuthStore } from '@/store/authStore';
 import { useProject } from '@/hooks/useProject';
@@ -506,8 +506,8 @@ const ChatPage = () => {
 
       {/* Contenedor principal */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar con ancho fijo */}
-        <div className="w-80 flex-shrink-0">
+        {/* Sidebar con ancho fijo - Solo visible en desktop */}
+        <div className="hidden md:block w-80 flex-shrink-0">
           <Sidebar 
             generatingInProjectId={generatingInProjectId}
             projectsWithNewMessages={projectsWithNewMessages}
@@ -539,13 +539,32 @@ const ChatPage = () => {
         )}
 
         {/* Elegant Header - Responsive */}
-        <div className="h-16 md:h-20 border-b border-purple-500/20 flex items-center justify-between px-4 md:px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl">
+        <div className="h-14 md:h-20 border-b border-purple-500/20 flex items-center justify-between px-3 md:px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl">
           <div className="flex items-center space-x-2 md:space-x-4">
-            <img src={logo} alt="Dazly" className="h-6 md:h-8 w-auto" />
+            {/* Botón hamburguesa solo en móvil */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden h-8 w-8 p-0 text-purple-300 hover:text-white hover:bg-purple-500/10"
+                >
+                  <Menu size={20} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-80 bg-[#0a0a0a] border-purple-500/20 backdrop-blur-xl p-0">
+                <Sidebar 
+                  generatingInProjectId={generatingInProjectId}
+                  projectsWithNewMessages={projectsWithNewMessages}
+                />
+              </SheetContent>
+            </Sheet>
+            
+            <img src={logo} alt="Dazly" className="h-5 md:h-8 w-auto" />
             <div className="hidden md:block h-6 w-px bg-purple-400/30" />
             <div>
               <h1 
-                className="text-sm md:text-lg font-light text-purple-100 cursor-pointer hover:text-purple-50 transition-colors truncate max-w-[150px] md:max-w-none"
+                className="text-xs md:text-lg font-light text-purple-100 cursor-pointer hover:text-purple-50 transition-colors truncate max-w-[120px] md:max-w-none"
                 onClick={() => {
                   const newName = prompt('Nuevo nombre del proyecto:', currentProject?.name || 'Nuevo Proyecto');
                   if (newName && newName.trim() && newName.trim() !== currentProject?.name) {
@@ -564,17 +583,17 @@ const ChatPage = () => {
             </div>
           </div>
           
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-2 md:space-x-6">
             {/* Project Gallery Button */}
             {projectImages.length > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowProjectGallery(true)}
-                className="flex items-center space-x-2 text-purple-300 hover:text-white hover:bg-purple-500/10 transition-all"
+                className="flex items-center space-x-1 md:space-x-2 text-purple-300 hover:text-white hover:bg-purple-500/10 transition-all h-8 px-2 md:h-9 md:px-3"
               >
-                <GalleryIcon size={16} />
-                <span className="text-sm font-light">{projectImages.length}</span>
+                <GalleryIcon size={14} className="md:w-4 md:h-4" />
+                <span className="text-xs md:text-sm font-light">{projectImages.length}</span>
               </Button>
             )}
 
@@ -680,18 +699,18 @@ const ChatPage = () => {
         </div>
 
         {/* Messages Area - Limpio y Espacioso */}
-        <ScrollArea className="flex-1 px-6 relative">
+        <ScrollArea className="flex-1 px-3 md:px-6 relative">
           {/* Botón para bajar al final */}
           {showScrollButton && (
             <button
               onClick={() => scrollToBottom(true)}
-              className="fixed bottom-32 right-8 z-50 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 animate-bounce"
+              className="fixed bottom-24 right-4 md:bottom-32 md:right-8 z-50 bg-purple-600 hover:bg-purple-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 animate-bounce"
               aria-label="Ir al final"
             >
-              <ArrowDown size={24} />
+              <ArrowDown size={20} className="md:w-6 md:h-6" />
             </button>
           )}
-          <div ref={messagesContainerRef} className="max-w-4xl mx-auto space-y-8 py-8">
+          <div ref={messagesContainerRef} className="max-w-4xl mx-auto space-y-4 md:space-y-8 py-4 md:py-8">
             {!currentProject?.messages?.length ? (
               <div className="flex items-center justify-center py-12">
                 <div className="text-center max-w-4xl w-full">
@@ -994,7 +1013,7 @@ const ChatPage = () => {
 
         {/* Elegant Input Area */}
         <div className="border-t border-purple-500/20 bg-gradient-to-t from-[#0a0a0a] to-[#0a0a0a]/95 backdrop-blur-xl">
-          <div className="max-w-4xl mx-auto px-8 py-6">
+          <div className="max-w-4xl mx-auto px-3 md:px-8 py-3 md:py-6">
             {/* Credits Warning */}
             {(user?.imagesRemaining || 0) <= 0 && (
               <div className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 backdrop-blur-sm">
@@ -1017,27 +1036,27 @@ const ChatPage = () => {
             {/* Input Container */}
 
             <div className="relative">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 md:space-x-4">
                 {/* Main Input */}
-                <div className="flex-1 space-y-3">
+                <div className="flex-1 space-y-2 md:space-y-3">
                   {/* Preview automático de imágenes que se enviarán */}
                   {smartImages.length > 0 && message.trim() && (
-                    <div className="p-3 bg-gradient-to-r from-purple-900/10 to-pink-900/10 rounded-xl border border-purple-500/20 backdrop-blur-sm">
+                    <div className="p-2 md:p-3 bg-gradient-to-r from-purple-900/10 to-pink-900/10 rounded-xl border border-purple-500/20 backdrop-blur-sm">
                       <div className="flex items-center space-x-2 mb-2">
                         <ImageIcon className="h-3 w-3 text-purple-400" />
                         <span className="text-xs text-purple-300/80">Se incluirán {smartImages.length} imagen{smartImages.length > 1 ? 'es' : ''}</span>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-1.5 md:gap-2">
                         {smartImages.slice(0, 3).map((image, idx) => (
                           <img
                             key={image.id}
                             src={image.url}
                             alt={image.name}
-                            className="w-8 h-8 rounded object-cover"
+                            className="w-7 h-7 md:w-8 md:h-8 rounded object-cover"
                           />
                         ))}
                         {smartImages.length > 3 && (
-                          <div className="w-8 h-8 rounded bg-purple-600/20 flex items-center justify-center">
+                          <div className="w-7 h-7 md:w-8 md:h-8 rounded bg-purple-600/20 flex items-center justify-center">
                             <span className="text-xs text-purple-300">+{smartImages.length - 3}</span>
                           </div>
                         )}
@@ -1064,7 +1083,7 @@ const ChatPage = () => {
                         textarea.style.height = `${newHeight}px`;
                       }}
                       placeholder={(user?.plan === 'free' || user?.imagesRemaining <= 0) ? "Sin créditos - Actualiza tu plan para crear..." : "Describe lo que quieres crear..."}
-                      className={`w-full pr-16 py-3 px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[48px] overflow-y-auto scrollbar-hide ${
+                      className={`w-full pr-12 md:pr-16 py-2.5 md:py-3 px-3 md:px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[44px] md:min-h-[48px] text-sm md:text-base overflow-y-auto scrollbar-hide ${
                         (user?.plan === 'free' || user?.imagesRemaining <= 0)
                           ? 'bg-gray-800/50 border border-gray-600 text-gray-400 placeholder:text-gray-500 cursor-not-allowed'
                           : 'bg-purple-900/10 border border-purple-500/30 text-purple-100 placeholder:text-purple-400/50 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20'
@@ -1189,16 +1208,16 @@ const ChatPage = () => {
                   <Button
                     onClick={isGenerating ? handleCancelGeneration : handleSendMessage}
                     disabled={!isGenerating && (!message.trim() || message.trim().split(/\s+/).filter(word => word.length > 0).length > 500)}
-                    className={`h-12 w-12 p-0 rounded-xl transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 flex-shrink-0 backdrop-blur-sm ${
+                    className={`h-10 w-10 md:h-12 md:w-12 p-0 rounded-xl transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 flex-shrink-0 backdrop-blur-sm ${
                       isGenerating 
                         ? 'bg-red-950/40 hover:bg-red-900/50 border-2 border-red-500/30 hover:border-red-400/40 hover:shadow-red-500/10'
                         : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-gray-600 disabled:to-gray-700 hover:shadow-purple-500/20'
                     }`}
                   >
                     {isGenerating ? (
-                      <X className="text-red-300 hover:text-red-200 transition-colors" size={18} />
+                      <X className="text-red-300 hover:text-red-200 transition-colors" size={16} />
                     ) : (
-                      <SendIcon className="text-white" size={18} />
+                      <SendIcon className="text-white" size={16} />
                     )}
                   </Button>
                 </div>
