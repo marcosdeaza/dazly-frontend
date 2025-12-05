@@ -61,6 +61,9 @@ export const useProject = () => {
       setCurrentProject(serverProject || newProject);
       return serverProject || newProject;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
     } catch (error: any) {
       console.error('Error creando proyecto:', error);
       
@@ -70,10 +73,13 @@ export const useProject = () => {
       }
       
       // Para otros errores, crear proyecto local
+<<<<<<< HEAD
 =======
     } catch (error) {
       console.error('Error creando proyecto:', error);
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
       setCurrentProject(newProject);
       return newProject;
     }

@@ -1,8 +1,12 @@
 import { Instagram } from "lucide-react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+import { Link } from "react-router-dom";
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 
 const Footer = () => {
   return (
@@ -10,6 +14,9 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
             <p className="text-muted-foreground">
               © 2025 Dazly.art. Todos los derechos reservados.
@@ -29,11 +36,14 @@ const Footer = () => {
               </Link>
             </div>
           </div>
+<<<<<<< HEAD
 =======
           <p className="text-muted-foreground">
             © 2025 Dazly.art. Todos los derechos reservados.
           </p>
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 
           <div className="flex items-center gap-3">
             <span className="text-foreground">Contáctanos en Instagram:</span>

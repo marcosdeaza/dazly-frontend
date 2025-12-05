@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 // src/components/ChatImageManager.tsx - Gestor simple y directo de imágenes para el chat
 
 import React, { useState, useCallback } from 'react';
@@ -9,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { useUserStore } from '@/store/userStore';
 
 interface ImageData {
+<<<<<<< HEAD
 =======
 // src/components/ChatImageManager.tsx - Gestor inteligente de imágenes para el chat
 
@@ -21,11 +25,16 @@ import { useUserStore } from '@/store/userStore';
 
 interface SmartImage {
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
   id: string;
   file: File;
   url: string;
   name: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 }
 
 interface ChatImageManagerProps {
@@ -35,6 +44,7 @@ interface ChatImageManagerProps {
   onToggle: () => void;
   onClear?: () => void;
   existingImages?: ImageData[]; // ✨ Recibir imágenes desde ChatPage (Ctrl+V)
+<<<<<<< HEAD
 =======
   size: number;
   type: string;
@@ -48,6 +58,8 @@ interface ChatImageManagerProps {
   onToggle: () => void;
   onClear?: () => void; // ✅ Nueva prop para limpiar desde afuera
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 }
 
 export const ChatImageManager = ({ 
@@ -55,6 +67,7 @@ export const ChatImageManager = ({
   className,
   isVisible,
   onToggle,
+<<<<<<< HEAD
 <<<<<<< HEAD
   onClear,
   existingImages = []
@@ -64,12 +77,20 @@ export const ChatImageManager = ({
 }: ChatImageManagerProps) => {
   const [images, setImages] = useState<SmartImage[]>([]);
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+  onClear,
+  existingImages = []
+}: ChatImageManagerProps) => {
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
   const { user } = useUserStore();
 
   // Verificar si es Plan Free
   const isFreeUser = user?.plan === 'free';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
   // ✅ NO mantener estado local - usar directamente existingImages
   // Esto evita desincronización entre el estado padre y el componente
 
@@ -82,6 +103,7 @@ export const ChatImageManager = ({
   // ✅ Eliminado - la limpieza se maneja desde el padre
 
   // Botón flotante
+<<<<<<< HEAD
 =======
   // LÓGICA MEJORADA: Mantener imágenes hasta que se envíe mensaje
   const handleImagesReady = useCallback((newImages: SmartImage[]) => {
@@ -100,6 +122,8 @@ export const ChatImageManager = ({
 
   // Botón flotante apagado para Plan Free (sin efectos)
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
   const FloatingToggleButton = () => (
     <Button
       size="sm"
@@ -108,10 +132,14 @@ export const ChatImageManager = ({
         "h-10 w-10 p-0 rounded-xl relative overflow-hidden",
         isFreeUser 
 <<<<<<< HEAD
+<<<<<<< HEAD
           ? "text-gray-400 cursor-default"
 =======
           ? "text-gray-400 cursor-default" // Solo apagado, sin background ni efectos
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+          ? "text-gray-400 cursor-default"
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           : cn(
               "transition-all duration-300 hover:bg-purple-500/20 hover:scale-110 active:scale-95",
               isVisible 
@@ -124,16 +152,22 @@ export const ChatImageManager = ({
     >
       <div className="relative">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
         {existingImages.length > 0 && (
           <div className="absolute -top-2 -right-2 h-5 w-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
             <span className="text-xs text-white font-bold">
               {existingImages.length}
+<<<<<<< HEAD
 =======
         {images.length > 0 && (
           <div className="absolute -top-2 -right-2 h-5 w-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
             <span className="text-xs text-white font-bold">
               {images.length}
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
             </span>
           </div>
         )}
@@ -147,10 +181,14 @@ export const ChatImageManager = ({
       
       {/* Efecto de brillo cuando hay imágenes */}
 <<<<<<< HEAD
+<<<<<<< HEAD
       {existingImages.length > 0 && (
 =======
       {images.length > 0 && (
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+      {existingImages.length > 0 && (
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-xl" />
       )}
     </Button>
@@ -162,10 +200,14 @@ export const ChatImageManager = ({
       <FloatingToggleButton />
       
 <<<<<<< HEAD
+<<<<<<< HEAD
       {/* Panel desplegable simple */}
 =======
       {/* Panel desplegable del uploader */}
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+      {/* Panel desplegable simple */}
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
       {isVisible && (
         <div className={cn(
           "fixed bottom-24 right-8 z-50 w-96 max-w-[90vw] p-1",
@@ -183,16 +225,22 @@ export const ChatImageManager = ({
                   <div>
                     <h3 className="text-sm font-medium text-purple-100">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                       Imágenes
                     </h3>
                     <p className="text-xs text-purple-400/60">
                       Hasta 5 imágenes · Usa Ctrl+V para pegar
+<<<<<<< HEAD
 =======
                       Gestor de Imágenes
                     </h3>
                     <p className="text-xs text-purple-400/60">
                       Sube hasta 5 imágenes para usar en el chat
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                     </p>
                   </div>
                 </div>
@@ -209,6 +257,9 @@ export const ChatImageManager = ({
             </div>
             
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
             {/* Contenido del uploader simple */}
             <div className="p-4">
               <SimpleImageUploader
@@ -217,6 +268,7 @@ export const ChatImageManager = ({
                 existingImages={existingImages}
               />
             </div>
+<<<<<<< HEAD
 =======
             {/* Contenido del uploader */}
             <div className="p-4">
@@ -238,6 +290,8 @@ export const ChatImageManager = ({
               </div>
             )}
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           </div>
         </div>
       )}

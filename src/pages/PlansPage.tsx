@@ -2,10 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Check, Crown, Zap, Rocket, Star, Building2, ArrowLeft, Eye, Sparkles, Snowflake, Clock } from 'lucide-react';
 =======
 import { Check, Crown, Zap, Rocket, Star, Building2, ArrowLeft, Eye, Sparkles } from 'lucide-react';
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+import { Check, Crown, Zap, Rocket, Star, Building2, ArrowLeft, Eye, Sparkles } from 'lucide-react';
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 import { loadStripe } from '@stripe/stripe-js';
 import { useUserStore } from '@/store/userStore';
 import { useAuthStore } from '@/store/authStore';
@@ -22,9 +26,12 @@ const PlanIcon = ({ planId }: { planId: string }) => {
   switch (planId) {
     case 'free': return <Eye className="h-6 w-6" />;
 <<<<<<< HEAD
+<<<<<<< HEAD
     case 'xmas': return <Snowflake className="h-6 w-6" />; // 🎄 Icono navideño
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
     case 'pulse': return <Sparkles className="h-6 w-6" />;
     case 'flow': return <Crown className="h-6 w-6" />;
     case 'summit': return <Rocket className="h-6 w-6" />;
@@ -34,6 +41,7 @@ const PlanIcon = ({ planId }: { planId: string }) => {
   }
 };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 // 🎄 Componente de nieve navideña
 const SnowEffect = () => {
@@ -68,6 +76,8 @@ const SnowEffect = () => {
 
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 const PlansPage = () => {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
@@ -75,6 +85,7 @@ const PlansPage = () => {
   const { token } = useAuthStore();
   const { toast } = useToast();
   const navigate = useNavigate();
+<<<<<<< HEAD
 <<<<<<< HEAD
   
   // 🎄 Estado para el contador de Navidad
@@ -116,6 +127,8 @@ const PlansPage = () => {
   };
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 
   // ✅ DETECTAR PAGO EXITOSO Y ACTUALIZAR PLAN AUTOMÁTICAMENTE
   useEffect(() => {
@@ -150,9 +163,12 @@ const PlansPage = () => {
             // Mostrar mensaje de bienvenida profesional
             const planNames: Record<string, string> = {
 <<<<<<< HEAD
+<<<<<<< HEAD
               xmas: 'Xmas Special 🎄',
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
               pulse: 'Pulse',
               flow: 'Flow',
               summit: 'Summit',
@@ -205,6 +221,7 @@ const PlansPage = () => {
       return;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     // 🎄 Validar acceso al plan Xmas
     if (planId === 'xmas') {
@@ -228,6 +245,8 @@ const PlansPage = () => {
     }
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 
     setLoadingPlan(planId);
 
@@ -310,6 +329,7 @@ const PlansPage = () => {
         )}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         {/* 🎄 Banner Especial XMAS para usuarios no logueados o free */}
         {canAccessXmas() && !xmasExpired && (
           <div className="mb-12 relative overflow-hidden">
@@ -391,6 +411,8 @@ const PlansPage = () => {
                   ? 'border-red-500 ring-4 ring-red-500/50 bg-gradient-to-br from-red-900/30 to-green-900/30 shadow-2xl shadow-red-500/40 animate-pulse-border'
                   : plan.popular 
 =======
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
         {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {PLANS.map((plan, index) => (
@@ -398,13 +420,17 @@ const PlansPage = () => {
               key={plan.id}
               className={`relative p-6 bg-gray-900/50 backdrop-blur-sm border transition-all duration-300 hover:scale-105 ${
                 plan.popular 
+<<<<<<< HEAD
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                   ? 'border-purple-500 ring-2 ring-purple-500/20' 
                   : plan.recommended
                   ? 'border-blue-500 ring-2 ring-blue-500/20'
                   : plan.enterprise
                   ? 'border-yellow-500 ring-2 ring-yellow-500/20'
                   : 'border-white/10 hover:border-white/20'
+<<<<<<< HEAD
 <<<<<<< HEAD
               } overflow-hidden`}
             >
@@ -446,6 +472,8 @@ const PlansPage = () => {
                 <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-600 to-orange-600 px-4 py-2 text-xs font-bold shadow-lg shadow-yellow-500/50 tracking-wider">
                   PROFESIONAL
 =======
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
               }`}
             >
               {/* Plan Badges */}
@@ -462,11 +490,15 @@ const PlansPage = () => {
               {plan.enterprise && (
                 <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-600 to-orange-600 px-3 py-1">
                   Profesional
+<<<<<<< HEAD
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                 </Badge>
               )}
 
               {/* Plan Header */}
+<<<<<<< HEAD
 <<<<<<< HEAD
               <div className="text-center mb-6 relative z-10">
                 <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-4 ${
@@ -475,6 +507,10 @@ const PlansPage = () => {
               <div className="text-center mb-6">
                 <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-4 ${
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+              <div className="text-center mb-6">
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-4 ${
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                   plan.popular ? 'bg-gradient-to-r from-purple-600 to-pink-600' :
                   plan.recommended ? 'bg-gradient-to-r from-blue-600 to-cyan-600' :
                   plan.enterprise ? 'bg-gradient-to-r from-yellow-600 to-orange-600' :
@@ -489,6 +525,7 @@ const PlansPage = () => {
                   {plan.price === 0 ? (
                     <span className="text-4xl font-bold">Gratis</span>
 <<<<<<< HEAD
+<<<<<<< HEAD
                   ) : plan.id === 'xmas' ? (
                     <div className="flex flex-col items-center">
                       <div className="flex items-baseline justify-center">
@@ -500,6 +537,8 @@ const PlansPage = () => {
                     </div>
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                   ) : (
                     <div className="flex items-baseline justify-center">
                       <span className="text-4xl font-bold">€{plan.price}</span>
@@ -509,6 +548,9 @@ const PlansPage = () => {
                 </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                 {/* Key Stats */}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 text-center">
@@ -522,17 +564,21 @@ const PlansPage = () => {
                     <div className="text-xs text-pink-400/70">Proyectos</div>
                   </div>
                 </div>
+<<<<<<< HEAD
 =======
                 <p className="text-lg font-semibold text-purple-400">
                   {plan.images} imágenes/mes
                 </p>
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
               </div>
 
               {/* Features */}
               <div className="space-y-3 mb-8">
                 {plan.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-center space-x-3">
+<<<<<<< HEAD
 <<<<<<< HEAD
                     {plan.id === 'xmas' ? (
                       <Snowflake className="h-5 w-5 flex-shrink-0 text-red-400" />
@@ -545,13 +591,18 @@ const PlansPage = () => {
                       }`} />
                     )}
 =======
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                     <Check className={`h-5 w-5 flex-shrink-0 ${
                       plan.popular ? 'text-purple-400' :
                       plan.recommended ? 'text-blue-400' :
                       plan.enterprise ? 'text-yellow-400' :
                       'text-green-400'
                     }`} />
+<<<<<<< HEAD
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                     <span className="text-sm text-gray-300">{feature}</span>
                   </div>
                 ))}
@@ -561,6 +612,7 @@ const PlansPage = () => {
               <Button
                 onClick={() => handleSubscribe(plan.id, plan.price)}
                 disabled={loadingPlan === plan.id}
+<<<<<<< HEAD
 <<<<<<< HEAD
                 className={`w-full h-12 text-base font-semibold transition-all relative z-10 ${
                   user?.plan === plan.id && plan.id !== 'free'
@@ -572,6 +624,11 @@ const PlansPage = () => {
                   user?.plan === plan.id && plan.id !== 'free'
                     ? 'bg-gray-600 cursor-not-allowed'
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+                className={`w-full h-12 text-base font-semibold transition-all ${
+                  user?.plan === plan.id && plan.id !== 'free'
+                    ? 'bg-gray-600 cursor-not-allowed'
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                     : plan.popular
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                     : plan.recommended
@@ -598,6 +655,7 @@ const PlansPage = () => {
               {/* Additional Info */}
               {plan.id !== 'free' && (
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <p className="text-xs text-gray-500 text-center mt-4 relative z-10">
                   {plan.id === 'xmas' 
                     ? '🎄 Solo para nuevos usuarios • Válido hasta Navidad' 
@@ -608,13 +666,18 @@ const PlansPage = () => {
             );
           })}
 =======
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                 <p className="text-xs text-gray-500 text-center mt-4">
                   {plan.id === 'free' ? 'Sin compromiso' : 'Cancela en cualquier momento • Soporte 24/7'}
                 </p>
               )}
             </Card>
           ))}
+<<<<<<< HEAD
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
         </div>
 
         {/* FAQ Section */}
@@ -657,14 +720,20 @@ const PlansPage = () => {
             ¿Tienes más preguntas? Estamos aquí para ayudarte.
           </p>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           <Button 
             variant="outline" 
             className="px-8 py-3"
             onClick={() => window.open('https://ig.me/m/dazly.art', '_blank')}
           >
+<<<<<<< HEAD
 =======
           <Button variant="outline" className="px-8 py-3">
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
             Contactar Soporte
           </Button>
         </div>

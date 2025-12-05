@@ -20,9 +20,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { toast } from 'sonner';
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+import { toast } from 'sonner';
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
 
 interface SidebarProps {
   generatingInProjectId?: string | null;
@@ -36,9 +40,13 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
   const [editingProject, setEditingProject] = useState<string | null>(null);
   const [editProjectName, setEditProjectName] = useState('');
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [showLimitDenied, setShowLimitDenied] = useState(false); // ✨ Efecto visual de negación
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+  const [showLimitDenied, setShowLimitDenied] = useState(false); // ✨ Efecto visual de negación
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
   
   const { 
     user, 
@@ -54,6 +62,9 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
     if (!localNewProjectName.trim()) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
     // ✅ Verificar límite de proyectos ANTES de intentar crear
     const userPlan = user?.plan || 'free';
     const currentPlanInfo = PLANS.find(p => p.id === userPlan);
@@ -67,8 +78,11 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
       return;
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
     const project: Project = {
       id: crypto.randomUUID(),
       name: localNewProjectName.trim(),
@@ -84,6 +98,9 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
       setLocalNewProjectName('');
       setIsCreatingProject(false); // ✅ Cerrar el formulario después de crear
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
     } catch (error: any) {
       console.error('Error creando proyecto:', error);
       
@@ -92,10 +109,13 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
         // Sin notificación - solo efecto visual
       }
       
+<<<<<<< HEAD
 =======
     } catch (error) {
       console.error('Error creando proyecto:', error);
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
       setIsCreatingProject(false); // ✅ Cerrar incluso si hay error
     }
   };
@@ -143,6 +163,9 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
             size="sm"
             onClick={() => setIsCreatingProject(true)}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
             className={`h-8 w-8 p-0 rounded-full border transition-all duration-300 ${
               showLimitDenied
                 ? 'bg-red-600/40 border-red-500/60 animate-shake'
@@ -150,20 +173,27 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
             }`}
           >
             <Plus className={`h-4 w-4 transition-colors ${showLimitDenied ? 'text-red-300' : 'text-purple-300'}`} />
+<<<<<<< HEAD
 =======
             className="h-8 w-8 p-0 rounded-full bg-purple-600/20 hover:bg-purple-500/30 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
           >
             <Plus className="h-4 w-4 text-purple-300" />
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           </Button>
         </div>
 
         {/* Usage Stats */}
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div className="p-4 bg-purple-900/10 border border-purple-500/20 rounded-xl backdrop-blur-sm space-y-4">
 =======
         <div className="p-4 bg-purple-900/10 border border-purple-500/20 rounded-xl backdrop-blur-sm">
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+        <div className="p-4 bg-purple-900/10 border border-purple-500/20 rounded-xl backdrop-blur-sm space-y-4">
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-purple-300/80 font-light">Plan actual</span>
             <Badge className={`text-xs ${
@@ -176,6 +206,9 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
           </div>
           
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           {/* Proyectos */}
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -199,17 +232,24 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
           </div>
           
           {/* Créditos */}
+<<<<<<< HEAD
 =======
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           {user?.plan === 'free' ? (
             <>
               <div className="flex items-center space-x-2 mb-2">
                 <Eye className="text-blue-400" size={16} />
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
                 <span className="text-sm font-light text-blue-200">Vista Previa</span>
               </div>
               <div className="text-xs text-blue-400/60 font-light">
                 Sin créditos · Actualiza tu plan
+<<<<<<< HEAD
 =======
                 <span className="text-lg font-light text-blue-200">Vista Previa</span>
               </div>
@@ -219,16 +259,22 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
               <div className="w-full bg-blue-900/30 rounded-full h-1.5">
                 <div className="bg-gradient-to-r from-blue-400 to-cyan-400 h-1.5 rounded-full w-full" />
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
               </div>
             </>
           ) : (
             <>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-purple-300/80 font-light">Créditos</span>
                 <span className="text-xs text-purple-200 font-medium">
                   {user?.imagesRemaining || 0}/{currentPlan.images}
                 </span>
+<<<<<<< HEAD
 =======
               <div className="text-2xl font-light text-purple-100 mb-1">
                 {user?.imagesRemaining || 0}
@@ -236,6 +282,8 @@ export const Sidebar = ({ generatingInProjectId, projectsWithNewMessages = [] }:
               <div className="text-xs text-purple-400/60 mb-3 font-light">
                 de {currentPlan.images} imágenes restantes
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
               </div>
               <div className="w-full bg-purple-900/30 rounded-full h-1.5">
                 <div 

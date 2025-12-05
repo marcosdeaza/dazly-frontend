@@ -85,6 +85,7 @@ const LoginPage = () => {
         </div>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         {/* --- GOOGLE OAUTH ACTIVADO --- */}
 =======
         {/* --- GOOGLE OAUTH TEMPORALMENTE DESHABILITADO --- */}
@@ -97,16 +98,23 @@ const LoginPage = () => {
         </Button>
         */}
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+        {/* --- GOOGLE OAUTH ACTIVADO --- */}
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
         <div className="space-y-4">
           <Button 
             variant="outline" 
             className="w-full bg-transparent text-white hover:bg-white/10"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
             asChild
           >
             <a href={`${import.meta.env.VITE_API_URL || 'http://localhost:8081'}/api/auth/google`}>
               <span className="mr-2">G</span> Continuar con Google
             </a>
+<<<<<<< HEAD
 =======
             onClick={() => {
               toast({
@@ -118,6 +126,8 @@ const LoginPage = () => {
           >
             <span className="mr-2">G</span> Continuar con Google
 >>>>>>> db4ceb629c696e3718439846957596f2f57c766f
+=======
+>>>>>>> 513b4d9ebe9f924ced5664f8b444c51364846368
           </Button>
 
           <div className="relative">
