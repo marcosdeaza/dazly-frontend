@@ -44,7 +44,10 @@ export interface Plan {
   name: string;
   price: number;
   images: number;
+<<<<<<< HEAD
   maxProjects: number; // ✨ Límite de proyectos
+=======
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
   features: string[];
   popular?: boolean;
   recommended?: boolean;
@@ -53,6 +56,7 @@ export interface Plan {
 
 export const PLANS: Plan[] = [
   {
+<<<<<<< HEAD
     id: 'xmas',
     name: 'Xmas Special',
     price: 0.99,
@@ -78,6 +82,17 @@ export const PLANS: Plan[] = [
       '1 proyecto incluido',
       'Explora todas las funciones',
       'Sin compromiso'
+=======
+    id: 'free',
+    name: 'Free',
+    price: 0,
+    images: 0,
+    features: [
+      'Explora la plataforma',
+      'Prueba funciones básicas',
+      'Sin compromiso',
+      'Perfecto para comenzar'
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
     ]
   },
   {
@@ -85,11 +100,18 @@ export const PLANS: Plan[] = [
     name: 'Pulse',
     price: 3.99,
     images: 50,
+<<<<<<< HEAD
     maxProjects: 5, // 🔒 Máximo 5 proyectos
     features: [
       '50 creaciones al mes',
       'Hasta 5 proyectos',
       'Calidad HD profesional',
+=======
+    features: [
+      '50 creaciones al mes',
+      'Calidad HD profesional',
+      'Generación en segundos',
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
       'Chat inteligente con IA',
       'Soporte por email'
     ]
@@ -99,6 +121,7 @@ export const PLANS: Plan[] = [
     name: 'Flow',
     price: 9.99,
     images: 150,
+<<<<<<< HEAD
     maxProjects: 10, // 🔒 Máximo 10 proyectos
     features: [
       '150 creaciones al mes',
@@ -108,12 +131,23 @@ export const PLANS: Plan[] = [
       'Velocidad prioritaria'
     ],
     popular: true // 💜 El más vendido
+=======
+    features: [
+      '150 creaciones al mes',
+      'Calidad Ultra HD (4K)',
+      'Edición avanzada de imágenes',
+      'Proyectos ilimitados',
+      'Velocidad prioritaria'
+    ],
+    popular: true
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
   },
   {
     id: 'summit',
     name: 'Summit',
     price: 19.99,
     images: 350,
+<<<<<<< HEAD
     maxProjects: 25, // 🔒 Máximo 25 proyectos
     features: [
       '350 creaciones al mes',
@@ -121,6 +155,14 @@ export const PLANS: Plan[] = [
       'Modelos de IA premium',
       'Generación ultra-rápida',
       'Estilos exclusivos',
+=======
+    features: [
+      '350 creaciones al mes',
+      'Modelos de IA premium',
+      'Generación ultra-rápida',
+      'Estilos exclusivos',
+      'Historial completo',
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
       'Soporte prioritario 24/7'
     ],
     recommended: true
@@ -130,6 +172,7 @@ export const PLANS: Plan[] = [
     name: 'Peak',
     price: 39.99,
     images: 700,
+<<<<<<< HEAD
     maxProjects: 50, // 🔒 Máximo 50 proyectos
     features: [
       '700 creaciones al mes',
@@ -138,11 +181,21 @@ export const PLANS: Plan[] = [
       'Procesamiento instantáneo',
       'Colaboración en equipo',
       'Exportación masiva'
+=======
+    features: [
+      '700 creaciones al mes',
+      'Funciones experimentales',
+      'Procesamiento instantáneo',
+      'Colaboración en equipo',
+      'Exportación masiva',
+      'Acceso anticipado a novedades'
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
     ]
   },
   {
     id: 'infinity',
     name: 'Infinity',
+<<<<<<< HEAD
     price: 99.99, // 💎 Actualizado a 99.99€
     images: 1500,
     maxProjects: 100, // 🔒 100 proyectos
@@ -153,6 +206,17 @@ export const PLANS: Plan[] = [
       'Integraciones personalizadas',
       'Capacitación del equipo',
       'Gerente de cuenta dedicado'
+=======
+    price: 79.99,
+    images: 1500,
+    features: [
+      '1500 creaciones al mes',
+      'Uso empresarial sin límites',
+      'Integraciones personalizadas',
+      'Capacitación del equipo',
+      'Gerente de cuenta dedicado',
+      'SLA garantizado'
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
     ],
     enterprise: true
   }

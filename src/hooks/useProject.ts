@@ -60,6 +60,7 @@ export const useProject = () => {
       const serverProject = await addProject(newProject);
       setCurrentProject(serverProject || newProject);
       return serverProject || newProject;
+<<<<<<< HEAD
     } catch (error: any) {
       console.error('Error creando proyecto:', error);
       
@@ -69,6 +70,10 @@ export const useProject = () => {
       }
       
       // Para otros errores, crear proyecto local
+=======
+    } catch (error) {
+      console.error('Error creando proyecto:', error);
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
       setCurrentProject(newProject);
       return newProject;
     }

@@ -1,11 +1,15 @@
 import { Instagram } from "lucide-react";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
+=======
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
 
 const Footer = () => {
   return (
     <footer className="bg-black border-t border-white/10 py-12">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+<<<<<<< HEAD
           <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
             <p className="text-muted-foreground">
               © 2025 Dazly.art. Todos los derechos reservados.
@@ -25,6 +29,11 @@ const Footer = () => {
               </Link>
             </div>
           </div>
+=======
+          <p className="text-muted-foreground">
+            © 2025 Dazly.art. Todos los derechos reservados.
+          </p>
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
 
           <div className="flex items-center gap-3">
             <span className="text-foreground">Contáctanos en Instagram:</span>

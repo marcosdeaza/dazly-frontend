@@ -1,7 +1,11 @@
 // src/pages/ChatPage.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
+<<<<<<< HEAD
 import { Settings, User, CreditCard, History, Eye, X, ArrowDown, Menu } from 'lucide-react';
+=======
+import { Settings, User, CreditCard, History, Eye, X, ArrowDown } from 'lucide-react';
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
 import { useUserStore } from '@/store/userStore';
 import { useAuthStore } from '@/store/authStore';
 import { useProject } from '@/hooks/useProject';
@@ -12,7 +16,10 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useToast } from '@/components/ui/use-toast';
+<<<<<<< HEAD
 import { toast as sonnerToast } from 'sonner';
+=======
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
 import { PLANS } from '@/types';
 import { Sidebar } from '@/components/ChatSidebar';
 import { AccountSettings } from '@/components/AccountSettings';
@@ -42,6 +49,12 @@ interface SmartImage {
   file: File;
   url: string;
   name: string;
+<<<<<<< HEAD
+=======
+  size: number;
+  type: string;
+  preview?: string;
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
 }
 
 const ChatPage = () => {
@@ -56,13 +69,20 @@ const ChatPage = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [smartImages, setSmartImages] = useState<SmartImage[]>([]);
   const [showImageManager, setShowImageManager] = useState(false);
+<<<<<<< HEAD
+=======
+  const [imageManagerKey, setImageManagerKey] = useState(0);
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
   const [showProjects, setShowProjects] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
+<<<<<<< HEAD
   // Usar sonnerToast como 'toast' para consistencia (más bonito)
   const toastFn = sonnerToast;
+=======
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
   const navigate = useNavigate();
   
   const { user, updateCreditsFromServer, projects, updateProject } = useUserStore();
@@ -105,6 +125,7 @@ const ChatPage = () => {
     return () => container.removeEventListener('scroll', handleScroll);
   }, [messagesContainerRef.current]);
 
+<<<<<<< HEAD
   // ✨ NUEVO: Manejar Ctrl+V globalmente para pegar imágenes
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
@@ -218,6 +239,8 @@ const ChatPage = () => {
     };
   }, []); // ✅ Sin dependencias - se registra solo una vez
 
+=======
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
   const handleSendMessage = async () => {
     console.log('🔍 Current Project:', currentProject);
     console.log('🔍 Current Project ID:', currentProject?.id);
@@ -239,6 +262,7 @@ const ChatPage = () => {
         // createProject ya selecciona el proyecto automáticamente
         // Esperar un momento para que se actualice el estado
         await new Promise(resolve => setTimeout(resolve, 100));
+<<<<<<< HEAD
       } catch (error: any) {
         console.error('❌ Error creando proyecto automático:', error);
         
@@ -255,6 +279,15 @@ const ChatPage = () => {
             duration: 3000
           });
         }
+=======
+      } catch (error) {
+        console.error('❌ Error creando proyecto automático:', error);
+        toast({
+          title: "Error",
+          description: "No se pudo crear el proyecto. Intenta de nuevo.",
+          variant: "destructive"
+        });
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
         return;
       }
     }
@@ -272,11 +305,16 @@ const ChatPage = () => {
     const messageContent = message.trim();
     const attachedImages = [...smartImages]; // Copia inmutable
     
+<<<<<<< HEAD
     // ✅ Limpiar el input inmediatamente Y resetear altura del textarea
     setMessage('');
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
+=======
+    // ✅ Limpiar el input inmediatamente
+    setMessage('');
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
     setIsGenerating(true);
     setGeneratingInProjectId(targetProjectId); // ✨ Marcar que se está generando en este proyecto
 
@@ -309,7 +347,11 @@ const ChatPage = () => {
           });
           
           imagesBase64.push({
+<<<<<<< HEAD
             mimeType: img.file.type,
+=======
+            mimeType: img.type,
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
             base64Data: base64
           });
         }
@@ -451,8 +493,19 @@ const ChatPage = () => {
   // Nueva función simple para resetear el gestor de imágenes
   const resetImageManager = () => {
     console.log('🧹 Reseteando gestor de imágenes - LIMPIEZA TOTAL');
+<<<<<<< HEAD
     // ✅ Limpiar el estado de imágenes
     setSmartImages([]);
+=======
+    // ✅ PRIMERO limpiar el estado
+    setSmartImages([]);
+    // ✅ LUEGO forzar recreación del componente
+    setImageManagerKey(prev => {
+      const newKey = prev + 1;
+      console.log(`✅ ImageManagerKey: ${prev} → ${newKey}`);
+      return newKey;
+    });
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
   };
 
   const currentPlan = PLANS.find(p => p.id === user?.plan) || PLANS[0];
@@ -502,12 +555,21 @@ const ChatPage = () => {
   }
 
   return (
+<<<<<<< HEAD
     <div className="h-screen bg-[#0a0a0a] text-white flex overflow-hidden flex-col w-full max-w-full">
 
       {/* Contenedor principal */}
       <div className="flex-1 flex overflow-hidden w-full">
         {/* Sidebar con ancho fijo - Solo visible en desktop */}
         <div className="hidden md:block w-80 flex-shrink-0">
+=======
+    <div className="h-screen bg-[#0a0a0a] text-white flex overflow-hidden flex-col">
+
+      {/* Contenedor principal */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar con ancho fijo */}
+        <div className="w-80 flex-shrink-0">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
           <Sidebar 
             generatingInProjectId={generatingInProjectId}
             projectsWithNewMessages={projectsWithNewMessages}
@@ -515,7 +577,11 @@ const ChatPage = () => {
         </div>
         
         {/* Main Chat Area */}
+<<<<<<< HEAD
         <div className="flex-1 flex flex-col relative w-full min-w-0">
+=======
+        <div className="flex-1 flex flex-col relative">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
         
         {/* Plan Free Banner - Always visible for free users */}
         {user?.plan === 'free' && (
@@ -539,6 +605,7 @@ const ChatPage = () => {
         )}
 
         {/* Elegant Header - Responsive */}
+<<<<<<< HEAD
         <div className="h-14 md:h-20 border-b border-purple-500/20 flex items-center justify-between px-3 md:px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl w-full">
           <div className="flex items-center space-x-2 md:space-x-4">
             {/* Botón hamburguesa solo en móvil */}
@@ -565,6 +632,15 @@ const ChatPage = () => {
             <div>
               <h1 
                 className="text-xs md:text-lg font-light text-purple-100 cursor-pointer hover:text-purple-50 transition-colors truncate max-w-[120px] md:max-w-none"
+=======
+        <div className="h-16 md:h-20 border-b border-purple-500/20 flex items-center justify-between px-4 md:px-8 bg-gradient-to-r from-[#0a0a0a] to-[#1a0a1a] backdrop-blur-xl">
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <img src={logo} alt="Dazly" className="h-6 md:h-8 w-auto" />
+            <div className="hidden md:block h-6 w-px bg-purple-400/30" />
+            <div>
+              <h1 
+                className="text-sm md:text-lg font-light text-purple-100 cursor-pointer hover:text-purple-50 transition-colors truncate max-w-[150px] md:max-w-none"
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                 onClick={() => {
                   const newName = prompt('Nuevo nombre del proyecto:', currentProject?.name || 'Nuevo Proyecto');
                   if (newName && newName.trim() && newName.trim() !== currentProject?.name) {
@@ -583,17 +659,28 @@ const ChatPage = () => {
             </div>
           </div>
           
+<<<<<<< HEAD
           <div className="flex items-center space-x-2 md:space-x-6">
+=======
+          <div className="flex items-center space-x-6">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
             {/* Project Gallery Button */}
             {projectImages.length > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowProjectGallery(true)}
+<<<<<<< HEAD
                 className="flex items-center space-x-1 md:space-x-2 text-purple-300 hover:text-white hover:bg-purple-500/10 transition-all h-8 px-2 md:h-9 md:px-3"
               >
                 <GalleryIcon size={14} className="md:w-4 md:h-4" />
                 <span className="text-xs md:text-sm font-light">{projectImages.length}</span>
+=======
+                className="flex items-center space-x-2 text-purple-300 hover:text-white hover:bg-purple-500/10 transition-all"
+              >
+                <GalleryIcon size={16} />
+                <span className="text-sm font-light">{projectImages.length}</span>
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
               </Button>
             )}
 
@@ -641,7 +728,11 @@ const ChatPage = () => {
                   </Avatar>
                 </Button>
               </SheetTrigger>
+<<<<<<< HEAD
               <SheetContent side="right" className="w-[85vw] max-w-80 bg-[#0a0a0a] border-purple-500/20 backdrop-blur-xl">
+=======
+              <SheetContent side="right" className="w-80 bg-[#0a0a0a] border-purple-500/20 backdrop-blur-xl">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                 <div className="space-y-6">
                   <div className="text-center pt-6">
                     <Avatar className="h-20 w-20 mx-auto mb-4 ring-2 ring-purple-400/30">
@@ -699,11 +790,16 @@ const ChatPage = () => {
         </div>
 
         {/* Messages Area - Limpio y Espacioso */}
+<<<<<<< HEAD
         <ScrollArea className="flex-1 px-3 md:px-6 relative w-full overflow-x-hidden">
+=======
+        <ScrollArea className="flex-1 px-6 relative">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
           {/* Botón para bajar al final */}
           {showScrollButton && (
             <button
               onClick={() => scrollToBottom(true)}
+<<<<<<< HEAD
               className="fixed bottom-24 right-4 md:bottom-32 md:right-8 z-50 bg-purple-600 hover:bg-purple-700 text-white p-2 md:p-3 rounded-full shadow-lg transition-all duration-300 animate-bounce"
               aria-label="Ir al final"
             >
@@ -723,12 +819,37 @@ const ChatPage = () => {
                         Dazly Professional Sandbox
                       </h2>
                       <p className="text-sm md:text-base text-purple-300/60 leading-relaxed max-w-md mx-auto">
+=======
+              className="fixed bottom-32 right-8 z-50 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 animate-bounce"
+              aria-label="Ir al final"
+            >
+              <ArrowDown size={24} />
+            </button>
+          )}
+          <div ref={messagesContainerRef} className="max-w-4xl mx-auto space-y-8 py-8">
+            {!currentProject?.messages?.length ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center max-w-4xl w-full">
+                  <div className="mb-8 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-8">
+                        <img src={logo} alt="Dazly" className="h-24 w-auto opacity-90" />
+                      </div>
+                      <h2 className="text-3xl font-light text-purple-100 mb-3">
+                        Dazly Professional Sandbox
+                      </h2>
+                      <p className="text-purple-300/60 leading-relaxed max-w-md">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                         Crea, edita y desarrolla imágenes profesionales con IA. Desde marketing hasta arte, todo en un solo lugar.
                       </p>
                     </div>
                   </div>
                   
+<<<<<<< HEAD
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 px-2">
+=======
+                  <div className="grid md:grid-cols-3 gap-4">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                     {[
                       {
                         icon: MarketingIcon,
@@ -781,8 +902,13 @@ const ChatPage = () => {
                     </div>
                   ) : msg.role === 'user' ? (
                     <div className="flex justify-end">
+<<<<<<< HEAD
                       <div className="w-full max-w-2xl md:w-auto">
                         <div className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-sm rounded-xl md:rounded-2xl px-3 md:px-6 py-2.5 md:py-4 shadow-xl border border-slate-600/30">
+=======
+                      <div className="max-w-2xl w-full md:w-auto">
+                        <div className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 backdrop-blur-sm rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-xl border border-slate-600/30">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                           <div className="space-y-3">
                             {/* Texto del mensaje */}
                             <p className="text-gray-100 font-normal leading-relaxed break-words whitespace-pre-wrap">
@@ -795,7 +921,11 @@ const ChatPage = () => {
                                 {msg.images.slice(0, 4).map((image, idx) => (
                                   <div key={image.id} className="relative group">
                                     <img
+<<<<<<< HEAD
                                       src={image.url}
+=======
+                                      src={image.preview || image.url}
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                                       alt={image.name}
                                       className="w-full h-auto rounded-lg border border-slate-500/30"
                                       style={{
@@ -820,7 +950,11 @@ const ChatPage = () => {
                     </div>
                   ) : (
                     <div className="flex justify-start">
+<<<<<<< HEAD
                       <div className="w-full max-w-3xl md:w-auto space-y-3 md:space-y-4">
+=======
+                      <div className="max-w-3xl w-full md:w-auto space-y-4">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                         {msg.content && (
                           <div>
                             <MarkdownMessage content={msg.content} />
@@ -990,8 +1124,13 @@ const ChatPage = () => {
             {/* ✨ MEJORADO: Animación minimalista de generación */}
             {isGenerating && generatingInProjectId === currentProject?.id && (
               <div className="flex justify-start animate-fade-in-down">
+<<<<<<< HEAD
                 <div className="w-full max-w-2xl">
                   <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-md rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 border border-purple-500/30 shadow-lg shadow-purple-500/10">
+=======
+                <div className="max-w-2xl w-full">
+                  <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-md rounded-2xl px-6 py-4 border border-purple-500/30 shadow-lg shadow-purple-500/10">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                     <div className="flex items-center space-x-4">
                       <div className="relative">
                         <div className="animate-spin h-6 w-6 border-2 border-purple-400/30 border-t-purple-400 rounded-full"></div>
@@ -1012,6 +1151,7 @@ const ChatPage = () => {
         </ScrollArea>
 
         {/* Elegant Input Area */}
+<<<<<<< HEAD
         <div className="border-t border-purple-500/20 bg-gradient-to-t from-[#0a0a0a] to-[#0a0a0a]/95 backdrop-blur-xl w-full">
           <div className="w-full max-w-4xl mx-auto px-3 md:px-8 py-3 md:py-6">
             {/* Credits Warning */}
@@ -1031,6 +1171,25 @@ const ChatPage = () => {
                   >
                     Actualizar plan
                   </Button>
+=======
+        <div className="border-t border-purple-500/20 bg-gradient-to-t from-[#0a0a0a] to-[#0a0a0a]/95 backdrop-blur-xl">
+          <div className="max-w-4xl mx-auto px-8 py-6">
+            {/* Credits Warning */}
+            {(user?.imagesRemaining || 0) <= 0 && (
+              <div className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30 backdrop-blur-sm">
+                <div className="flex items-center justify-center space-x-2">
+                  <BoltIcon className="text-red-400" size={16} />
+                  <p className="text-sm text-red-300 font-light">
+                    Sin créditos disponibles.
+                    <Button 
+                      variant="link" 
+                      className="p-0 ml-2 h-auto text-red-200 underline hover:text-white transition-colors"
+                      onClick={() => navigate('/plans')}
+                    >
+                      Actualizar plan
+                    </Button>
+                  </p>
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                 </div>
               </div>
             )}
@@ -1038,16 +1197,26 @@ const ChatPage = () => {
             {/* Input Container */}
 
             <div className="relative">
+<<<<<<< HEAD
               <div className="flex items-center space-x-2 md:space-x-4">
                 {/* Main Input */}
                 <div className="flex-1 space-y-2 md:space-y-3">
                   {/* Preview automático de imágenes que se enviarán */}
                   {smartImages.length > 0 && message.trim() && (
                     <div className="p-2 md:p-3 bg-gradient-to-r from-purple-900/10 to-pink-900/10 rounded-xl border border-purple-500/20 backdrop-blur-sm">
+=======
+              <div className="flex items-center space-x-4">
+                {/* Main Input */}
+                <div className="flex-1 space-y-3">
+                  {/* Preview automático de imágenes que se enviarán */}
+                  {smartImages.length > 0 && message.trim() && (
+                    <div className="p-3 bg-gradient-to-r from-purple-900/10 to-pink-900/10 rounded-xl border border-purple-500/20 backdrop-blur-sm">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                       <div className="flex items-center space-x-2 mb-2">
                         <ImageIcon className="h-3 w-3 text-purple-400" />
                         <span className="text-xs text-purple-300/80">Se incluirán {smartImages.length} imagen{smartImages.length > 1 ? 'es' : ''}</span>
                       </div>
+<<<<<<< HEAD
                       <div className="flex gap-1.5 md:gap-2">
                         {smartImages.slice(0, 3).map((image, idx) => (
                           <img
@@ -1059,6 +1228,19 @@ const ChatPage = () => {
                         ))}
                         {smartImages.length > 3 && (
                           <div className="w-7 h-7 md:w-8 md:h-8 rounded bg-purple-600/20 flex items-center justify-center">
+=======
+                      <div className="flex gap-2">
+                        {smartImages.slice(0, 3).map((image, idx) => (
+                          <img
+                            key={image.id}
+                            src={image.preview || image.url}
+                            alt={image.name}
+                            className="w-8 h-8 rounded object-cover"
+                          />
+                        ))}
+                        {smartImages.length > 3 && (
+                          <div className="w-8 h-8 rounded bg-purple-600/20 flex items-center justify-center">
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                             <span className="text-xs text-purple-300">+{smartImages.length - 3}</span>
                           </div>
                         )}
@@ -1085,7 +1267,11 @@ const ChatPage = () => {
                         textarea.style.height = `${newHeight}px`;
                       }}
                       placeholder={(user?.plan === 'free' || user?.imagesRemaining <= 0) ? "Sin créditos - Actualiza tu plan para crear..." : "Describe lo que quieres crear..."}
+<<<<<<< HEAD
                       className={`w-full pr-12 md:pr-16 py-2.5 md:py-3 px-3 md:px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[44px] md:min-h-[48px] text-sm md:text-base overflow-y-auto scrollbar-hide ${
+=======
+                      className={`w-full pr-16 py-3 px-4 rounded-2xl backdrop-blur-sm transition-all duration-300 resize-none min-h-[48px] overflow-y-auto scrollbar-hide ${
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                         (user?.plan === 'free' || user?.imagesRemaining <= 0)
                           ? 'bg-gray-800/50 border border-gray-600 text-gray-400 placeholder:text-gray-500 cursor-not-allowed'
                           : 'bg-purple-900/10 border border-purple-500/30 text-purple-100 placeholder:text-purple-400/50 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20'
@@ -1109,8 +1295,13 @@ const ChatPage = () => {
                     <div className="absolute right-2 bottom-2 z-20" style={{ pointerEvents: isGenerating ? 'none' : 'auto' }}>
                       <div className={`transition-opacity duration-200 ${isGenerating ? 'opacity-30' : 'opacity-100'}`}>
                         <ChatImageManager
+<<<<<<< HEAD
                           onImagesChange={handleSmartImagesChange}
                           existingImages={smartImages}
+=======
+                          key={`${imageManagerKey}-${currentProject?.id}`}
+                          onImagesChange={handleSmartImagesChange}
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                           isVisible={showImageManager && !isGenerating}
                           onToggle={() => {
                             if (!isGenerating) {
@@ -1121,6 +1312,10 @@ const ChatPage = () => {
                             if (!isGenerating) {
                               console.log('🧹 onClear llamado - Limpiando smartImages');
                               setSmartImages([]);
+<<<<<<< HEAD
+=======
+                              setImageManagerKey(prev => prev + 1);
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                             }
                           }}
                         />
@@ -1210,16 +1405,26 @@ const ChatPage = () => {
                   <Button
                     onClick={isGenerating ? handleCancelGeneration : handleSendMessage}
                     disabled={!isGenerating && (!message.trim() || message.trim().split(/\s+/).filter(word => word.length > 0).length > 500)}
+<<<<<<< HEAD
                     className={`h-10 w-10 md:h-12 md:w-12 p-0 rounded-xl transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 flex-shrink-0 backdrop-blur-sm ${
+=======
+                    className={`h-12 w-12 p-0 rounded-xl transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 flex-shrink-0 backdrop-blur-sm ${
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                       isGenerating 
                         ? 'bg-red-950/40 hover:bg-red-900/50 border-2 border-red-500/30 hover:border-red-400/40 hover:shadow-red-500/10'
                         : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:from-gray-600 disabled:to-gray-700 hover:shadow-purple-500/20'
                     }`}
                   >
                     {isGenerating ? (
+<<<<<<< HEAD
                       <X className="text-red-300 hover:text-red-200 transition-colors" size={16} />
                     ) : (
                       <SendIcon className="text-white" size={16} />
+=======
+                      <X className="text-red-300 hover:text-red-200 transition-colors" size={18} />
+                    ) : (
+                      <SendIcon className="text-white" size={18} />
+>>>>>>> db4ceb629c696e3718439846957596f2f57c766f
                     )}
                   </Button>
                 </div>
