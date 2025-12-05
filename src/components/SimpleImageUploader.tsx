@@ -1,0 +1,204 @@
+// src/components/SimpleImageUploader.tsx - Sistema simple de carga de imágenes con Ctrl+V
+import React, { useCallback, useRef } from 'react';
+import { ImagePlus, X, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+
+interface ImageData {
+  id: string;
+  file: File;
+  url: string;
+  name: string;
+}
+
+interface SimpleImageUploaderProps {
+  onImagesChange: (images: ImageData[]) => void;
+  maxImages?: number;
+  existingImages?: ImageData[];
+  onAddImages?: (files: File[]) => void; // ✨ Exponer función para agregar desde fuera
+}
+
+export const SimpleImageUploader: React.FC<SimpleImageUploaderProps> = ({
+  onImagesChange,
+  maxImages = 5,
+  existingImages = [],
+  onAddImages
+}) => {
+  // ✅ NO mantener estado local - usar directamente existingImages del padre
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Agregar imágenes
+  const addImages = useCallback((files: File[]) => {
+    const remainingSlots = maxImages - existingImages.length;
+    
+    if (remainingSlots <= 0) {
+      toast.error(`Ya tienes ${maxImages} imágenes. Elimina alguna para añadir más.`);
+      return;
+    }
+
+    if (files.length > remainingSlots) {
+      toast.error(`Solo puedes añadir ${remainingSlots} imagen${remainingSlots > 1 ? 'es' : ''} más`);
+      files = files.slice(0, remainingSlots);
+    }
+
+    const newImages: ImageData[] = [];
+    const timestamp = Date.now();
+    
+    // ✅ Usar índice para IDs únicos garantizados
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Validar tipo
+      if (!file.type.startsWith('image/')) {
+        toast.error('Solo se permiten imágenes');
+        continue;
+      }
+
+      // Validar tamaño (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('La imagen no debe superar 10MB');
+        continue;
+      }
+
+      // ✅ ID único con timestamp + índice + random
+      newImages.push({
+        id: `upload-${timestamp}-${i}-${Math.random().toString(36).substr(2, 9)}`,
+        file,
+        url: URL.createObjectURL(file),
+        name: file.name
+      });
+    }
+
+    if (newImages.length > 0) {
+      // ✅ Notificar al padre con las nuevas imágenes agregadas
+      onImagesChange([...existingImages, ...newImages]);
+      toast.success(`${newImages.length} imagen${newImages.length > 1 ? 'es' : ''} añadida${newImages.length > 1 ? 's' : ''}`);
+    }
+  }, [existingImages, maxImages, onImagesChange]);
+
+  // Manejar selección de archivos
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      addImages(files);
+    }
+    // Limpiar input para permitir seleccionar el mismo archivo de nuevo
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, [addImages]);
+
+  // ⚠️ Ctrl+V se maneja en ChatPage para funcionar globalmente
+
+  // Eliminar imagen
+  const removeImage = useCallback((id: string) => {
+    const updated = existingImages.filter(img => img.id !== id);
+    // Liberar URL del objeto
+    const removed = existingImages.find(img => img.id === id);
+    if (removed) {
+      URL.revokeObjectURL(removed.url);
+    }
+    onImagesChange(updated);
+  }, [existingImages, onImagesChange]);
+
+  // Abrir selector de archivos
+  const openFileSelector = () => {
+    if (existingImages.length >= maxImages) {
+      toast.error(`Ya tienes ${maxImages} imágenes. Elimina alguna para añadir más.`);
+      return;
+    }
+    fileInputRef.current?.click();
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* Botón simple para subir */}
+      <div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileSelect}
+          className="hidden"
+        />
+        
+        <Button
+          type="button"
+          onClick={openFileSelector}
+          disabled={existingImages.length >= maxImages}
+          className="w-full h-12 bg-purple-600/20 hover:bg-purple-600/30 border-2 border-dashed border-purple-500/40 hover:border-purple-500/60 text-purple-300 hover:text-purple-200 transition-all duration-200"
+        >
+          <ImagePlus className="h-5 w-5 mr-2" />
+          {existingImages.length >= maxImages 
+            ? `Límite alcanzado (${maxImages} imágenes)`
+            : `Seleccionar imágenes (${existingImages.length}/${maxImages})`
+          }
+        </Button>
+        
+        <p className="text-xs text-purple-400/60 text-center mt-2">
+          También puedes pegar imágenes con <kbd className="px-1.5 py-0.5 bg-purple-500/20 rounded text-purple-300">Ctrl+V</kbd>
+        </p>
+      </div>
+
+      {/* Grid de imágenes */}
+      {existingImages.length > 0 && (
+        <div className="grid grid-cols-3 gap-2">
+          {existingImages.map((image) => (
+            <div
+              key={image.id}
+              className="relative group aspect-square rounded-lg overflow-hidden bg-purple-900/20 border border-purple-500/30"
+            >
+              <img
+                src={image.url}
+                alt={image.name}
+                className="w-full h-full object-cover"
+              />
+              
+              {/* Overlay con botón eliminar */}
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => removeImage(image.id)}
+                  className="h-8 w-8 p-0"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Nombre de archivo */}
+              <div className="absolute bottom-0 left-0 right-0 bg-black/80 px-2 py-1">
+                <p className="text-xs text-white truncate">
+                  {image.name}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Info adicional */}
+      {existingImages.length > 0 && (
+        <div className="flex items-center justify-between text-xs text-purple-400/60 pt-2 border-t border-purple-500/20">
+          <span>{existingImages.length} imagen{existingImages.length !== 1 ? 'es' : ''} seleccionada{existingImages.length !== 1 ? 's' : ''}</span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              existingImages.forEach(img => URL.revokeObjectURL(img.url));
+              onImagesChange([]);
+              toast.info('Todas las imágenes eliminadas');
+            }}
+            className="h-6 text-xs text-red-400 hover:text-red-300"
+          >
+            <Trash2 className="h-3 w-3 mr-1" />
+            Eliminar todas
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
